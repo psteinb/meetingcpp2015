@@ -1,8 +1,3 @@
-python-intermediate-mosquitoes
-==============================
+# meetingcpp2015
+repository for slides and code examples for my MeetingCpp talk in 2015
 
-Intermediate lesson on Python using mosquito data
-
-> Please see [https://github.com/swcarpentry/lesson-template](https://github.com/swcarpentry/lesson-template)
-> for instructions on formatting, building, and submitting lessons,
-> or run `make` in this directory for a list of helpful commands.
