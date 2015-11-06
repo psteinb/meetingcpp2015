@@ -60,13 +60,17 @@ $endfor$
 
 $if(title)$
 <section>
-    <h1 class="title">$title$</h1>
-$if(subtitle)$
-  <h2 class="subtitle">- $subtitle$ -</h1>
-$endif$
-$for(author)$
-    <h3 class="author">$author$</h2>
-$endfor$
+  <h1 class="title">$title$</h1>
+  $if(subtitle)$
+  <h2 class="subtitle">- $subtitle$ -</h2>
+  $endif$
+  <p>
+    <b>$author$</b><br>
+    <emph>($origin$)</emph><br>
+    <a href="mailto:$email$">$email$</a>
+    <br><br>
+  </p>
+  
     <h3 class="date">$date$</h3>
 </section>
 $endif$

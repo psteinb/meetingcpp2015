@@ -2,7 +2,9 @@
 
 repository for slides and code examples for my MeetingCpp talk in 2015
 
+# Slides
 
+Can be view under [idisk.mpi-cbg.de/~steinbac/meetingcpp2015](idisk.mpi-cbg.de/~steinbac/meetingcpp2015)
 
 # License
 
