@@ -5,5 +5,8 @@ FILTERS = $(wildcard tools/filters/*.py)
 
 all : slides.html
 
-slides.html : slides.md
-	${PANDOC} $< --template=pandoc-revealjs.template -t revealjs -o $@ -V revealjs-width:1600 --section-divs --filter tools/filters/columnfilter.py
+tools/filters/linkTable : tools/filters/linkTable.hs
+	ghc $<
+
+slides.html : slides.md tools/filters/linkTable
+	${PANDOC} $< --template=pandoc-revealjs.template -t revealjs -o $@ -V revealjs-width:1600 --section-divs --filter tools/filters/columnfilter.py --filter tools/filters/linkTable
