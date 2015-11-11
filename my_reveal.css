@@ -31,7 +31,9 @@ body {
   position: relative;
   line-height: 1;
   background-color: #fff;
-  color: #000; }
+  color: #000;
+  font-size: 16px;
+}
 
 ::-moz-selection {
   background: #FF5E99;
@@ -262,7 +264,7 @@ body {
   bottom: 15px;
   opacity: 0.5;
   z-index: 31;
-  font-size: 12px; }
+  font-size: 1.0em; }
 
 /*********************************************
  * SLIDES
@@ -1119,6 +1121,11 @@ body {
     line-height: 1.5;
 }
 
+
+.reveal .slides {
+    font-size: 1.2em;
+    /* line-height: 1.5; */
+}
 
 /* for vertical alignment of bootstrap divs that are childs of a "row" div*/
 .vertical-align {
