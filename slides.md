@@ -49,13 +49,15 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 </center>
 
 
-
-# Outline
+## Outline
 
 <center>
 1. Massively Parallel Programming
+
 2. Look and Feel
+
 3. GPGPU Landscape
+
 4. Outlook
 </center>
 
