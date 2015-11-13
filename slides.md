@@ -61,6 +61,7 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 4. Outlook
 </center>
 
+
 # Massively Parallel Programming
 
 
@@ -72,18 +73,20 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 
 <center>
 Tuna  
-![](img/tuna_x600.jpg)  
+![](img/1024px-Thunnus_orientalis_Osaka_Kaiyukan_Aquarium.jpg)  
 (fast, single, versatile)
 </center>
 
 [/column]
 
+. . .
+
 [column,class="col-xs-6"]
 
 <center>
 Forage Fish  
-![](img/forage_fish_x600.jpg)
-(small, many, parallel)
+![](img/forage_fish.jpg)
+(small, many, use wakefield of neighbor)
 </center>
 
 [/column]
@@ -126,6 +129,8 @@ GPU
 <center>
 Nvidia Tesla  
 ![](img/Nvidia-Tesla-K80_x400.jpg)
+
+GPU conceptually
 </center>
 
 [/column]
@@ -135,6 +140,8 @@ Nvidia Tesla
 <center>
 AMD FirePro  
 ![](img/amd-firepro-s9150-server-graphics_x400.png)
+
+GPU conceptually
 </center>
 
 [/column]
@@ -144,9 +151,21 @@ AMD FirePro
 <center>
 Intel MIC  
 ![](img/xeon_phi_x400.jpg)
+
+Not Covered Today!
 </center>
 
 [/column]
 
 [/columns]
 
+
+# Architecture
+
+## For simplicity: Nvidia Kepler based
+
+
+
+# Summary
+
+# Backup
