@@ -1,0 +1,39 @@
+% 2D Image with indices
+% Author: Peter Steinbach
+\documentclass{article}
+\usepackage[pdftex,active,tightpage]{preview}
+\usepackage{tikz}
+\usepackage{mathpazo}
+\PreviewEnvironment{tikzpicture}
+%%%<
+\usepackage{verbatim}
+%%%>
+\begin{comment}
+:Title:  2D Image with indices
+:Tags: Foreach
+:Author: Peter Steinbach
+:Slug: 2D Image
+\end{comment}
+
+\begin{document}
+\begin{tikzpicture}[scale=.5]
+
+  \begin{scope}
+    \draw (0, 0) grid (8, 8);
+    \foreach \y in {0,1,2,3,4,5,6,7} {
+      \foreach \x in {0,1,2,3,4,5,6,7} {
+        \node[font=\tiny] at (\x+0.5,7.5 - \y) {(\x,\y)};
+    }
+  }
+  \end{scope}
+  
+  \begin{scope}[xshift=9cm]
+    \draw (0, 5) grid (3, 8);
+    \foreach \y in {0,1,2} {
+      \foreach \x in {0,1,2} {
+        \node[font=\tiny] at (\x+0.5,7.5 - \y) {(\x,\y)};
+      }
+    }
+  \end{scope}
+\end{tikzpicture}
+\end{document}

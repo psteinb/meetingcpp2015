@@ -71,6 +71,7 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 
 [column,class="col-xs-6"]
 
+<!-- https://commons.wikimedia.org/wiki/File:Thunnus_orientalis_(Osaka_Kaiyukan_Aquarium).jpg -->
 <center>
 Tuna  
 ![](img/1024px-Thunnus_orientalis_Osaka_Kaiyukan_Aquarium.jpg)  
@@ -83,6 +84,7 @@ Tuna
 
 [column,class="col-xs-6"]
 
+<!-- TODO -->
 <center>
 Forage Fish  
 ![](img/forage_fish.jpg)
@@ -101,6 +103,7 @@ Forage Fish
 
 [column,class="col-xs-6"]
 
+<!-- TODO -->
 <center>
 CPU  
 ![](img/Central-Processing-Unit_x600.jpeg)
@@ -110,6 +113,7 @@ CPU
 
 [column,class="col-xs-6"]
 
+<!-- TODO -->
 <center>
 GPU  
 ![](img/titan_x_small_x600.png)
@@ -126,6 +130,7 @@ GPU
 
 [column,class="col-xs-4"]
 
+<!-- TODO -->
 <center>
 Nvidia Tesla  
 ![](img/Nvidia-Tesla-K80_x400.jpg)
@@ -136,7 +141,7 @@ GPU conceptually
 [/column]
 
 [column,class="col-xs-4"]
-
+<!-- TODO -->
 <center>
 AMD FirePro  
 ![](img/amd-firepro-s9150-server-graphics_x400.png)
@@ -147,7 +152,7 @@ GPU conceptually
 [/column]
 
 [column,class="col-xs-4"]
-
+<!-- TODO -->
 <center>
 Intel MIC  
 ![](img/xeon_phi_x400.jpg)
@@ -159,13 +164,43 @@ Not Covered Today!
 
 [/columns]
 
+<!-- http://www.theregister.co.uk/2012/05/18/inside_nvidia_kepler2_gk110_gpu_tesla/ -->
+# Architecture { data-background="img/nvidia_kepler_die_shot.jpg"} 
 
-# Architecture
+## For simplicity ... 
 
-## For simplicity: Nvidia Kepler based
+<!-- http://www.techpowerup.com/img/14-11-17/58a.jpg -->
+![](img/1200x_K80_tech_powerup.jpg) 
+
+<center>
+Nvidia Kepler based
+(dominant GPU architecture in HPC installations)
+</center>
+
+## We've all seen this
+
+![](img/1200x_islay_overbright.png)
+
+## A closer look
+
+![](img/1200x_islay_overbright_annotated.png)
+
+<center>
+*CPU/Ram and GPU are connected by PCIe!*
+</center>
+
+
+## A more in-depth look
 
 
 
 # Summary
+
+## Image References
+
+
+
+
+
 
 # Backup

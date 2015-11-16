@@ -1,0 +1,68 @@
+% 2D Image with indices
+% Author: Peter Steinbach
+\documentclass{article}
+\usepackage[pdftex,active,tightpage]{preview}
+\usepackage{tikz}
+\usepackage{mathpazo}
+\PreviewEnvironment{tikzpicture}
+%%%<
+\usepackage{verbatim}
+%%%>
+\begin{comment}
+:Title:  2D Image with indices
+:Tags: Foreach
+:Author: Peter Steinbach
+:Slug: SM
+\end{comment}
+
+\begin{document}
+\begin{tikzpicture}[scale=.5]
+
+  \node at (11,23) {SMX};
+  \draw[very thick] (-1,-1) rectangle (22,23.5);
+
+  %CUDA cores
+  \node[color=green] at (1,17) {Cores};
+  \draw[fill=green] (0, 0) grid (3, 16) rectangle (0,0);
+
+  %DP units
+  \node[color=orange] at (3,17) {DP};
+  \draw[fill=orange] (3, 0) grid (4, 16) rectangle (3,0);
+
+  %CUDA cores
+  \node at (6,17) {Cores};
+  \draw[fill=green] (4, 0) grid (8, 16) rectangle (4,0);
+
+  %DP units
+  \node at (7.2,17) {DP};
+  \draw[fill=orange] (7, 0) grid (8, 16) rectangle (7,0);
+
+  %LD/ST units
+  \node at (9,17) {LD/ST};
+  \draw[fill=gray] (8, 0) grid (9, 16) rectangle (8,0);
+
+  %SFU units
+  \node at (10,17) {SFU};
+  \draw[fill=brown] (9, 0) grid (10, 16) rectangle (9,0) ;
+
+  %CUDA cores
+  \draw (11, 0) grid (14, 16);
+
+  %DP units
+  \draw (14, 0) grid (15, 16);
+
+  %CUDA cores
+  \draw (15, 0) grid (18, 16);
+
+  %DP units
+  \draw (18, 0) grid (19, 16);
+
+  %LD/ST units
+  \draw (19, 0) grid (20, 16);
+
+  %SFU units
+  \draw (20, 0) grid (21, 16);
+  
+  
+\end{tikzpicture}
+\end{document}
