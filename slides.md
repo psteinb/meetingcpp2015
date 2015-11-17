@@ -64,6 +64,12 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 
 # Massively Parallel Programming
 
+## Why all the fuzz??
+
+<center>
+![](data/201x_acc_fraction_1200x.png)  
+Data obtained from [Top500.org](www.Top500.org)
+</center>
 
 ## Food Hunt
 
@@ -126,33 +132,34 @@ GPU
 
 ## Vendor Options
 
+<!-- TODO: image origins -->
 [columns,class="row vertical-align"]
 
 [column,class="col-xs-4"]
 
-<!-- TODO -->
+
 <center>
 Nvidia Tesla  
 ![](img/Nvidia-Tesla-K80_x400.jpg)
 
-GPU conceptually
+GPU without Graphics
 </center>
 
 [/column]
 
 [column,class="col-xs-4"]
-<!-- TODO -->
+
 <center>
 AMD FirePro  
 ![](img/amd-firepro-s9150-server-graphics_x400.png)
 
-GPU conceptually
+GPU without Graphics
 </center>
 
 [/column]
 
 [column,class="col-xs-4"]
-<!-- TODO -->
+
 <center>
 Intel MIC  
 ![](img/xeon_phi_x400.jpg)
@@ -167,26 +174,20 @@ Not Covered Today!
 <!-- http://www.theregister.co.uk/2012/05/18/inside_nvidia_kepler2_gk110_gpu_tesla/ -->
 # Architecture { data-background="img/nvidia_kepler_die_shot.jpg"} 
 
+
+## { data-background="img/1200x_islay_overbright.png" data-background-size="1200px" }
+
+
+## { data-background="img/1200x_islay_overbright_annotated.png" data-background-size="1200px" }
+
 ## For simplicity ... 
 
 <!-- http://www.techpowerup.com/img/14-11-17/58a.jpg -->
-![](img/1200x_K80_tech_powerup.jpg) 
-
 <center>
+![](img/1200x_K80_tech_powerup.jpg)
+
 Nvidia Kepler based
 (dominant GPU architecture in HPC installations)
-</center>
-
-## We've all seen this
-
-![](img/1200x_islay_overbright.png)
-
-## A closer look
-
-![](img/1200x_islay_overbright_annotated.png)
-
-<center>
-*CPU/Ram and GPU are connected by PCIe!*
 </center>
 
 

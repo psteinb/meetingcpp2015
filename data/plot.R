@@ -109,5 +109,5 @@ acc_plot <- acc_plot + geom_line(size=2) + ylim(0,50)
 acc_plot <- acc_plot + ylab("accelerated locations / %") + xlab("Year") 
 acc_plot <- acc_plot + my_theme #+ guides(col=guide_legend(ncol=3))
 
-ggsave("201x_acc_fraction.png",acc_plot,width=8,height=6)
-ggsave("201x_acc_fraction.svg",acc_plot,width=8,height=6)
+ggsave("201x_acc_fraction.png",acc_plot,width=8,height=5)
+ggsave("201x_acc_fraction.svg",acc_plot,width=8,height=5)
