@@ -1,68 +1,54 @@
 % 2D Image with indices
 % Author: Peter Steinbach
-\documentclass{article}
-\usepackage[pdftex,active,tightpage]{preview}
-\usepackage{tikz}
-\usepackage{mathpazo}
-\PreviewEnvironment{tikzpicture}
-%%%<
-\usepackage{verbatim}
-%%%>
-\begin{comment}
-:Title:  2D Image with indices
-:Tags: Foreach
-:Author: Peter Steinbach
-:Slug: SM
-\end{comment}
+\documentclass[tikz]{standalone}
+\usetikzlibrary{calc,trees,positioning,arrows,chains,shapes.geometric,%
+    decorations.pathreplacing,decorations.pathmorphing,shapes,%
+    matrix,shapes.symbols,fit}
+
+\pgfdeclarelayer{back}
+\pgfsetlayers{back,main}
+
+
+\makeatletter
+\tikzset{
+  fitting node/.style={
+    inner sep=0pt,
+    fill=none,
+    draw=none,
+    reset transform,
+    fit={(\pgf@pathminx,\pgf@pathminy) (\pgf@pathmaxx,\pgf@pathmaxy)}
+  },
+  reset transform/.code={\pgftransformreset}
+}
+\makeatother
 
 \begin{document}
-\begin{tikzpicture}[scale=.5]
+\begin{tikzpicture}[]
 
-  \node at (11,23) {SMX};
-  \draw[very thick] (-1,-1) rectangle (22,23.5);
+  \foreach \c in {0,...,3}
+  {
+    %\draw[-] ($(0.2,2.05)+(2.4*\c,0)$) rectangle ($(2.3,2.75)+(2.4*\c,0)$) node[fitting node] (l2_\c) {\bfseries{}L2};
+    \node [very thick,draw,rectangle, minimum width=3cm, minimum height=4cm,font=\huge] at($(8,10)+(3.5*\c,0)$) {\bfseries{}SMX};
+    
+  }
 
-  %CUDA cores
-  \node[color=green] at (1,17) {Cores};
-  \draw[fill=green] (0, 0) grid (3, 16) rectangle (0,0);
-
-  %DP units
-  \node[color=orange] at (3,17) {DP};
-  \draw[fill=orange] (3, 0) grid (4, 16) rectangle (3,0);
-
-  %CUDA cores
-  \node at (6,17) {Cores};
-  \draw[fill=green] (4, 0) grid (8, 16) rectangle (4,0);
-
-  %DP units
-  \node at (7.2,17) {DP};
-  \draw[fill=orange] (7, 0) grid (8, 16) rectangle (7,0);
-
-  %LD/ST units
-  \node at (9,17) {LD/ST};
-  \draw[fill=gray] (8, 0) grid (9, 16) rectangle (8,0);
-
-  %SFU units
-  \node at (10,17) {SFU};
-  \draw[fill=brown] (9, 0) grid (10, 16) rectangle (9,0) ;
-
-  %CUDA cores
-  \draw (11, 0) grid (14, 16);
-
-  %DP units
-  \draw (14, 0) grid (15, 16);
-
-  %CUDA cores
-  \draw (15, 0) grid (18, 16);
-
-  %DP units
-  \draw (18, 0) grid (19, 16);
-
-  %LD/ST units
-  \draw (19, 0) grid (20, 16);
-
-  %SFU units
-  \draw (20, 0) grid (21, 16);
+  \foreach \i in {0,...,4}
+  \draw[very thick,-latex] ($(8,6)+(3.5*\i,0)$) -- ($(8,7.7)+(3.5*\i,0)$) 
+  ;
   
+  \node (dots) [text=black,font=\huge] at($(8,10)+(14,0)$) {\bfseries{}\dots};
+
+  \draw[very thick] ($(8,6)$) -- ($(8,6)+(3.5*4,0)$) ;
+
+  \node (l2cache) [very thick,draw,rectangle, minimum width=12cm, minimum height=2cm,font=\huge] at($(8,10)+(7,-6)$) {\bfseries{}GPU L2 Cache};
+  \node (dram) [very thick,draw,rectangle, minimum width=12cm, minimum height=2cm,font=\huge] at($(8,10)+(7,-9)$) {\bfseries{}GPU DRAM};
+
+  \node (ddr4) [very thick,draw,rectangle, minimum width=6cm, minimum height=4cm,font=\huge] at($(2,10)+(0,-8)$) {\bfseries{}CPU RAM};
+
+  \draw[ultra thick] (ddr4) -- (dram);
+  \draw[very thick] (dram) -- (l2cache);
+  \draw[very thick] (l2cache) -- ($(8,6)+(7,0)$);
   
+
 \end{tikzpicture}
 \end{document}

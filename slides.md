@@ -193,7 +193,25 @@ Nvidia Kepler based
 
 ## A more in-depth look
 
+[columns,class="row vertical-align"]
 
+[column,class="col-xs-8"]
+
+<center>
+![](figures/GK210_sm.png)
+</center>
+
+[/column]
+
+[column,class="col-xs-4"]
+
+<center>
+* notes go here
+</center>
+
+[/column]
+
+[/columns]
 
 # Summary
 
