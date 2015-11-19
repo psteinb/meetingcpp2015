@@ -1,9 +1,10 @@
 
 
 SRC_FILES=$(wildcard *tex)
-DST_FILES=$(SRC_FILES:.tex=.svg)
+SVG_FILES=$(SRC_FILES:.tex=.svg)
+PDF_FILES=$(SRC_FILES:.tex=.svg)
 
-all : $(DST_FILES)
+all : $(SVG_FILES) $(PDF_FILES)
 
 %.pdf : %.tex
 	pdflatex $<

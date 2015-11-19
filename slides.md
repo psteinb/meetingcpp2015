@@ -137,7 +137,6 @@ GPU
 
 [column,class="col-xs-4"]
 
-
 <center>
 Nvidia Tesla  
 ![](img/Nvidia-Tesla-K80_x400.jpg)
@@ -203,10 +202,81 @@ width="1400" border="0" style="background-color: #FFFFFF;">
 Nvidia K40: 15 Streaming Multiprocessors (SMX), 12 GB of GDDR5 DRAM
 </center>
 
-## A Streaming Multiprocessor
+## Kepler SMX Close-up
+
+<div style="text-align: center;margin-top: 4%;">
+<object type="image/svg+xml" data="figures/GK210_sm.svg"
+width="1600" border="0" style="background-color: #FFFFFF;">
+</object>
+</div>
+
+<center>
+192 fp32 ops / clock; 64 fp64 ops / clock
+</center>
+
+
+## SIMT Execution
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-4"]
+
+**A Thread**
+
+[/column]
+
+
+[column,class="col-xs-2"]
+
+<center>
+<object type="image/svg+xml" data="figures/thread.svg"
+height="200" border="0">
+</object>
+</center>
+
+[/column]
+
+[column,class="col-xs-6"]
+
+* all threads execute same program
+* corresponds to single CUDA core
+
+[/column]
+
+[/columns]
 
 
 
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-4"]
+
+**A Thread Group**
+
+[/column]
+
+
+[column,class="col-xs-2"]
+
+<center>
+<object type="image/svg+xml" data="figures/thread_block.svg"
+height="200" border="0" >
+</object>
+</center>
+
+[/column]
+
+[column,class="col-xs-6"]
+
+* can cooperate
+* can synchronize
+* can exchange data
+
+[/column]
+
+
+
+[/columns]
 
 # Summary
 
