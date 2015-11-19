@@ -193,25 +193,20 @@ Nvidia Kepler based
 
 ## A more in-depth look
 
-[columns,class="row vertical-align"]
-
-[column,class="col-xs-8"]
-
-<center>
-![](figures/GK210_sm.png)
-</center>
-
-[/column]
-
-[column,class="col-xs-4"]
+<div style="text-align: center;margin-top: 4%;">
+<object type="image/svg+xml" data="figures/K40.svg"
+width="1400" border="0" style="background-color: #FFFFFF;">
+</object>
+</div>
 
 <center>
-* notes go here
+Nvidia K40: 15 Streaming Multiprocessors (SMX), 12 GB of GDDR5 DRAM
 </center>
 
-[/column]
+## A Streaming Multiprocessor
 
-[/columns]
+
+
 
 # Summary
 

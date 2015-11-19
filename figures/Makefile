@@ -1,12 +1,12 @@
 
 
 SRC_FILES=$(wildcard *tex)
-DST_FILES=$(SRC_FILES:.tex=.png)
+DST_FILES=$(SRC_FILES:.tex=.svg)
 
 all : $(DST_FILES)
 
 %.pdf : %.tex
 	pdflatex $<
 
-%.png : %.pdf
-	convert $< $@
+%.svg : %.pdf
+	pdf2svg $< $@
