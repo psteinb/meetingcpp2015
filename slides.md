@@ -54,11 +54,9 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 <center>
 1. Massively Parallel Programming
 
-2. Look and Feel
+2. What can you use today
 
-3. GPGPU Landscape
-
-4. Outlook
+3. What can you use tomorrow
 </center>
 
 
@@ -165,6 +163,76 @@ Intel MIC
 
 Not Covered Today!
 </center>
+
+[/column]
+
+[/columns]
+
+
+## Vendor flag ships
+
+<!-- TODO: image origins -->
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-4"]
+
+<center>
+_Nvidia Tesla K80_ 
+![](img/Nvidia-Tesla-K80_x200.jpg)
+</center>
+
+[/column]
+
+[column,class="col-xs-4"]
+
+<center>
+_AMD FirePro S9170_
+![](img/amd-firepro-s9150-server-graphics_x200.png)
+</center>
+
+[/column]
+
+[column,class="col-xs-4"]
+
+<center>
+Intel Xeon Phi 5110P
+![](img/xeon_phi_x200.jpg)
+</center>
+
+[/column]
+
+[/columns]
+
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-4"]
+
+* 2x GK210 chipsets
+* 2x 12 GB GDDR5 RAM
+* 2x 288 GB/s to RAM
+* 8.7 TFlops SP
+* 2.9 TFlops DP
+
+[/column]
+
+[column,class="col-xs-4"]
+
+* 1x Grenada XT
+* 32 GB GDDR5 RAM
+* 320 GB/s to RAM
+* 5.2 TFlops SP
+* 2.6 TFlops DP
+
+[/column]
+
+[column,class="col-xs-4"]
+
+* 62x x86 CPUs
+* 8 GB GDDR5 RAM
+* 320 GB/s to RAM
+* 2.1 TFlops SP
+* 1.1 TFlops DP
 
 [/column]
 
@@ -278,12 +346,38 @@ height="200" border="0" >
 
 [/columns]
 
+
+# What can you use today
+
+## A Word of Warning!
+
+## CUDA
+
+## CUB
+
+## thrust
+
+## OpenCL
+
+## C++AMP
+
+## Bolt
+
+## Pragma Mafia
+
+
+# What can you use tomorrow
+
+## Boost.Compute
+
+## Sycle and Spear
+
+## C++17
+
+
 # Summary
 
 ## Image References
-
-
-
 
 
 
