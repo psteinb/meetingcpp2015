@@ -26,26 +26,43 @@
 
   \foreach \c in {0,...,3}
    {
-     %cache line
-     \tikzmath{
-       integer \id;
-       \id = \t*3;
-     }
-     \node (line_\c) [rectangle,dashed,draw=white,very thick,minimum width=4.5.cm,minimum height=1.1cm,anchor=west] at($(0,0)+(5*\c,0)$) {};
+     % %cache line
+     % \tikzmath{
+     %   integer \id;
+     %   \id = 3*\c;
+     % }
+     \node (line_\c) [rectangle,dashed,draw=white,very thick,minimum width=4.5cm,minimum height=1.2cm,anchor=west] at($(0,0)+(4.7*\c,0)$) {};
 
-     \foreach \n in {0,...,3}
+     \foreach \n in {0,...,2}
      {
        \tikzmath{
-         integer \id;
+         integer \id, \m;
          \id = (4*\c)+\n;
+         \m = (32*\c)+\n;
        }
-       \node (mem_\id) [rectangle,dashed,draw=white,very thick,minimum width=1.cm,minimum height=1.cm,anchor=west] at($(line_\c.west)+(.1,0) + (1.1*\n,0)$) {};
+         
+       \node (mem_\id) [rectangle,draw=white,very thick,minimum width=1.cm,minimum height=1.cm,anchor=west,font=\Large] at($(line_\c.west)+(.1,0) + (1.1*\n,0)$) {$\m$};
      
      }
      
-     
+     \tikzmath{
+         integer \id;
+         \id = (4*\c)+3;
+       }
+       \node (mem_\id) [rectangle,draw=white,very thick,minimum width=1.cm,minimum height=1.cm,anchor=west] at($(line_\c.west)+(3.4,0)$) {\bfseries{}\dots};
    }
   
+   \node (thread_0) [draw=none,font=\huge,above] at($(mem_5.north) + (0,1.1)$) {$T_{0}$};
+   \draw[->,very thick] ($(thread_0.south) + (0,-.2)$) -- ($(mem_0.north) + (0,.1)$);
+   
+   \node (thread_1) [draw=none,font=\huge,above] at($(mem_7.north) + (0,1.1)$) {$T_{1}$};
+   \draw[->,very thick] ($(thread_1.south) + (0,-.2)$) -- ($(mem_15.north) + (0,.1)$);
 
+   \node (thread_2) [draw=none,font=\huge,above] at($(mem_9.north) + (0,1.1)$) {$T_{2}$};
+   \draw[->,very thick] ($(thread_2.south) + (0,-.2)$) -- ($(mem_7.north) + (0,.1)$);
+   
+   \node (thread_3) [draw=none,font=\huge,above] at($(mem_11.north) + (0,1.1)$) {$T_{3}$};
+   \draw[->,very thick] ($(thread_3.south) + (0,-.2)$) -- ($(mem_11.north) + (0,.1)$);
+   
 \end{tikzpicture}
 \end{document}
