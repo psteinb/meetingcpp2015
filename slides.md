@@ -378,6 +378,86 @@ height="200" border="0" >
 [/columns]
 
 
+## Hiding Latency
+
+* grid blocks dispatched to SMX based warp schedulers
+
+* hide (memory) latency by interleaving active warps
+
+. . .
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-12"]
+
+<center>
+<object type="image/svg+xml" data="figures/high_throughput_smx.svg"
+width="1400" border="0" >
+</object>
+</center>
+
+[/column]
+
+[/columns]
+
+## Best Practises: Data Locality
+
+<center>
+**CPUs and GPUs live at a distance**
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-12"]
+
+<object type="image/svg+xml" data="figures/gpu_cpu_dichotomy.svg"
+width="1400" border="0" >
+</object>
+
+
+[/column]
+
+[/columns]
+
+**Keep data put as long as possible!**
+
+</center>
+
+## Best Practises: Data Access
+
+**Good: Coalesced Memory Access**
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-12"]
+
+<object type="image/svg+xml" data="figures/coalesced_mem_access.svg"
+width="1000" border="0" >
+</object>
+
+
+[/column]
+
+[/columns]
+
+. . .
+
+**Bad: Non-Coalesced Memory Access**
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-12"]
+
+<object type="image/svg+xml" data="figures/non_coalesced_mem_access.svg"
+width="1000" border="0" >
+</object>
+
+
+[/column]
+
+[/columns]
+
+
+
 # What can you use today
 
 ## A Word of Warning!

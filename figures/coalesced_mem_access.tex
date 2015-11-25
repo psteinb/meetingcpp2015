@@ -1,0 +1,104 @@
+% 2D Image with indices
+% Author: Peter Steinbach
+\documentclass[tikz]{standalone}
+%\documentclass[dvisvgm]{standalone}
+%\def\pgfsysdriver{pgfsys-tex4ht.def}
+\usepackage{units}
+\usepackage{tikz}
+\usetikzlibrary{calc,math,trees,positioning,arrows.meta,chains,shapes.geometric,shapes.arrows,%
+    decorations.pathreplacing,decorations.pathmorphing,shapes,%
+    matrix,shapes.symbols,fit,backgrounds}
+
+ \pgfdeclarelayer{back}
+ \pgfsetlayers{background,back,main}
+
+
+\makeatletter
+\makeatother
+
+\begin{document}
+\begin{tikzpicture}[
+  show background rectangle, 
+  background rectangle/.style={fill=black},
+  color=white,
+  help lines/.style={color=lightgray,line width=.2pt},
+  ]
+
+  \foreach \t in {0,...,3}
+   {
+     %memory
+     \node (mem_\t) [rectangle,draw=white,very thick,minimum width=1.cm,minimum height=1.cm] at($(0,0)+(-1.2*\t,0)$) {};
+   }
+
+  \foreach \t in {0,...,3}
+   {
+     %memory
+     \node (mem_\t) [rectangle,draw=white,very thick,minimum width=1.cm,minimum height=1.cm] at($(0,0)+(1.2*\t,0)$) {};
+
+     %access
+     \draw[->,very thick] ($(mem_\t.north) + (0,1.1)$) -- ($(mem_\t.north) + (0,.1)$);
+
+     %label
+     \node (label_\t) [draw=none,font=\Large,above] at($(mem_\t.north) + (0,1.1)$) {$\t$};
+   }
+
+   \node (dots_between) [font=\Huge,anchor=west] at($(mem_3.east) + (0.1,0)$) {\dots};
+
+   \foreach \t in {0,...,3}
+   {
+     \tikzmath{
+       integer \x;
+       \x = \t+30;
+     }
+     % memory
+     \node (mem_\x) [rectangle,draw=white,very thick,minimum width=1.cm,minimum height=1.cm] at($(dots_between.east)+(.4,0)+(1.2*\t,0)$) {};
+     
+     %access
+     \draw[->,very thick] ($(mem_\x.north) + (0,1.1)$) -- ($(mem_\x.north) + (0,.1)$);
+
+     %label
+     \node (label_\x) [draw=none,font=\Large,above] at($(mem_\x.north) + (0,1.1)$)  {$\x$};
+   }
+
+   \foreach \t in {0,...,2}
+   {
+     %memory
+     \node (mem_\t) [rectangle,draw=white,very thick,minimum width=1.cm,minimum height=1.cm,anchor=west] at($(mem_33.east)+(.1,0)+(1.2*\t,0)$) {};
+   }
+% %  \draw[dashed, very thick] (5,-1) rectangle (25,14) ;
+%   \foreach \c in {0,...,3}
+%   {
+%     %\draw[-] ($(0.2,2.05)+(2.4*\c,0)$) rectangle ($(2.3,2.75)+(2.4*\c,0)$) node[fitting node] (l2_\c) {\bfseries{}L2};
+%     \node (smx_\c) [very thick,draw,rectangle, minimum width=3cm, minimum height=4cm,font=\huge] at($(8,10)+(3.5*\c,0)$) {};
+%     \node [very thick,font=\huge,anchor=north] at(smx_\c.north) {\bfseries{}SMX};
+%     \node (smx_\c_topright) [below =of smx_\c.north east] {};
+%     \draw[step=.2] (smx_\c.south west) grid (smx_\c_topright);
+%   }
+
+%   \foreach \i in {0,...,4}
+%   \draw[-latex,very thick] ($(8,6)+(3.5*\i,0)$) -- ($(8,7.7)+(3.5*\i,0)$) 
+%   ;
+  
+%   \node (dots) [text=white,font=\huge] at($(8,10)+(14,0)$) {\bfseries{}\dots};
+
+%   \draw[very thick] ($(8,6)$) -- ($(8,6)+(3.5*4,0)$) ;
+
+%   \node (l2cache) [very thick,draw,rectangle, minimum width=12cm, minimum height=2cm,font=\Huge] at($(8,10)+(7,-6)$) {\bfseries{}GPU L2 Cache};
+%   \node (dram) [very thick,draw,rectangle, minimum width=12cm, minimum height=2cm,font=\Huge] at($(8,10)+(7,-9)$) {\bfseries{}GPU DRAM};
+
+%   \node (cpu_ram) [very thick,draw,rectangle, minimum width=4.5cm, minimum height=12cm,font=\Huge] at($(0,10)+(0,-4)$) {\bfseries{}CPU RAM};
+
+%   % \draw[ultra thick] (cpu_ram) -- (dram);
+  
+%   %\draw[|<->|,very thick,double equal sign distance, line width=1mm, double distance=1.5mm,-Stealth] (dram.west) -- (cpu_ram.east);
+%   \node (middle) at($(dram.west)+(-3.2,0)$) {};
+%   \node [double arrow, draw, line width=1pt,font=\huge,inner xsep=.6cm,inner ysep=.3cm] at(middle) {PIC Express};
+%   \draw[ultra thick] (l2cache.south) -- (dram.north);
+
+
+%   \draw[very thick] (dram) -- (l2cache);
+%   \draw[very thick] (l2cache) -- ($(8,6)+(7,0)$);
+  
+
+\end{tikzpicture}
+\end{document}
