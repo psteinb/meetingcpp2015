@@ -26,11 +26,12 @@
   help lines/.style={color=lightgray,line width=.2pt},
   ]
 
-  \draw[very thick] (-.2,1.6) rectangle (.2,2.);
+ \node (number) [rectangle,draw=white,very thick,inner sep=3pt] at (0,2) {$32$};
+%  \draw[very thick] (-.2,1.6) rectangle (.2,2.);
 
     \draw [->,very thick,decorate,
     decoration={snake,amplitude=.4mm,segment length=2mm,post length=1mm}]
-    (0,1.5) -- (0,0);
+    (number.south) -- (0,0);
     
 
 \end{tikzpicture}

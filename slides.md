@@ -38,9 +38,10 @@ date: Meeting C++, December 05, 2015
 <center>
 Feel free to reply, discuss, inform, correct, ...   
 
-[github.com/psteinb/meetingcpp2015](https://github.com/psteinb/meetingcpp2015)
-
+**[github.com/psteinb/meetingcpp2015](https://github.com/psteinb/meetingcpp2015)**
 </center>
+
+. . .  
 
 <center>
 If not stated otherwise, the slides and all it's code is licensed under
@@ -54,9 +55,11 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 <center>
 1. Massively Parallel Programming
 
-2. What can you use today
+2. Architecture
 
-3. What can you use tomorrow
+3. What can you use today
+
+4. What can you use tomorrow
 </center>
 
 
@@ -279,7 +282,7 @@ width="1600" border="0" style="background-color: #FFFFFF;">
 </div>
 
 <center>
-192 fp32 ops / clock; 64 fp64 ops / clock
+CUDA core: 1 fp32 ops / clock <!-- (1/3 fp64 ops / clock) -->
 </center>
 
 
@@ -287,62 +290,90 @@ width="1600" border="0" style="background-color: #FFFFFF;">
 
 [columns,class="row vertical-align"]
 
-[column,class="col-xs-4"]
+[column,class="col-xs-2"]
 
-**A Thread**
+**Warp**
 
 [/column]
 
 
-[column,class="col-xs-2"]
+[column,class="col-xs-4"]
 
-<center>
+
 <object type="image/svg+xml" data="figures/thread.svg"
 height="200" border="0">
 </object>
-</center>
+
 
 [/column]
 
-[column,class="col-xs-6"]
+[column,class="col-xs-8"]
 
+* smallest unit of concurrency: *32 threads*
+* thread = single CUDA core
 * all threads execute same program
-* corresponds to single CUDA core
+
+[/column]
+
+[/columns]
+
+. . .  
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-2"]
+
+**Block**
+
+[/column]
+
+
+[column,class="col-xs-4"]
+
+
+<object type="image/svg+xml" data="figures/thread_block.svg"
+height="200" border="0" >
+</object>
+
+
+[/column]
+
+[column,class="col-xs-8"]
+
+* can synchronize (barriers)
+* can exchange data (common "shared" memory, etc.)
 
 [/column]
 
 [/columns]
 
 
+. . .  
 
 [columns,class="row vertical-align"]
 
-[column,class="col-xs-4"]
-
-**A Thread Group**
-
-[/column]
-
-
 [column,class="col-xs-2"]
 
-<center>
-<object type="image/svg+xml" data="figures/thread_block.svg"
+**Grid**
+
+[/column]
+
+
+[column,class="col-xs-4"]
+
+
+<object type="image/svg+xml" data="figures/grid_block.svg"
 height="200" border="0" >
 </object>
-</center>
+
 
 [/column]
 
-[column,class="col-xs-6"]
+[column,class="col-xs-8"]
 
-* can cooperate
-* can synchronize
-* can exchange data
+* grids/blocks serve as work distribution/sharing mechanism on device (occupancy)
 
 [/column]
-
-
 
 [/columns]
 
@@ -353,18 +384,13 @@ height="200" border="0" >
 
 ## CUDA
 
-## CUB
+## OpenCL
 
 ## thrust
 
-## OpenCL
-
-## C++AMP
-
-## Bolt
+## C++AMP and HC
 
 ## Pragma Mafia
-
 
 # What can you use tomorrow
 

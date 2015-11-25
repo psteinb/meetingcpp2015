@@ -26,13 +26,22 @@
   help lines/.style={color=lightgray,line width=.2pt},
   ]
 
-  \draw[very thick, dashed] (1.6,2.2) rectangle (-.4,-.4);
 
-  \foreach \c in {0,...,3}
+
+  \foreach \c in {0,...,2}
   {
-  \draw[very thick] ($(-.2,1.6)+(.4*\c,0)$) rectangle ($(.2,2.)+(.4*\c,0)$);
-  \draw [->,very thick,decorate, decoration={snake,amplitude=.4mm,segment length=2mm,post length=1mm}]  ($(0,1.5)+(.4*\c,0)$) -- ($(0,0)+(.4*\c,0)$);
-}
+  %\draw[very thick] ($(-.2,1.6)+(.4*\c,0)$) rectangle ($(.2,2.)+(.4*\c,0)$);
+    \node (number_\c) [rectangle,draw=white,very thick,inner sep=3pt] at ($(0,2)+(.6*\c,0)$) {$32$};
+  %\draw [->,very thick,decorate, decoration={snake,amplitude=.4mm,segment length=2mm,post length=1mm}]  ($(0,1.5)+(.4*\c,0)$) -- ($(0,0)+(.4*\c,0)$);
+    \draw [->,very thick,decorate, decoration={snake,amplitude=.4mm,segment length=2mm,post length=1mm}]  (number_\c.south) -- +(0,-2);
+  }
+
+  %\draw[very thick, dashed] (2.4,2.4) rectangle (-.4,-.4);
+
+  \coordinate (rect_top_right) at($(number_2.north east) + (.2,.2)$);
+  \coordinate (rect_bottom_left) at($(number_0.south west) + (-.2,-2.2)$);
+  \draw[very thick, dashed] (rect_bottom_left) rectangle (rect_top_right);
+
 
 \end{tikzpicture}
 \end{document}
