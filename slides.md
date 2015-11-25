@@ -248,15 +248,17 @@ Intel Xeon Phi 5110P
 ## { data-background="img/1200x_islay_overbright.png" data-background-size="1200px" }
 
 
+
 ## { data-background="img/1200x_islay_overbright_annotated.png" data-background-size="1200px" }
+
+
 
 ## For simplicity ... 
 
-<!-- http://www.techpowerup.com/img/14-11-17/58a.jpg -->
 <center>
-![](img/1200x_K80_tech_powerup.jpg)
+![](img/Nvidia-Tesla-K80_x400.jpg)
 
-Nvidia Kepler based
+All illustrations based on Nvidia Kepler Architecture  
 (dominant GPU architecture in HPC installations)
 </center>
 
@@ -378,11 +380,9 @@ height="200" border="0" >
 [/columns]
 
 
-## Hiding Latency
+## Hiding Memory Latency
 
-* grid blocks dispatched to SMX based warp schedulers
-
-* hide (memory) latency by interleaving active warps
+* grid blocks dispatched to SMX based warp schedulers  
 
 . . .
 
@@ -400,11 +400,12 @@ width="1400" border="0" >
 
 [/columns]
 
+* hide (memory) latency by interleaving active warps
+
+
 ## Best Practises: Data Locality
 
 <center>
-**CPUs and GPUs live at a distance**
-
 [columns,class="row vertical-align"]
 
 [column,class="col-xs-12"]
@@ -422,8 +423,9 @@ width="1400" border="0" >
 
 </center>
 
-## Best Practises: Data Access
+## Best Practises: Memory Access
 
+<center>
 **Good: Coalesced Memory Access**
 
 [columns,class="row vertical-align"]
@@ -439,7 +441,12 @@ width="1000" border="0" >
 
 [/columns]
 
+</center>
+
+
 . . .
+
+<center>
 
 **Bad: Non-Coalesced Memory Access**
 
@@ -451,18 +458,205 @@ width="1000" border="0" >
 width="1000" border="0" >
 </object>
 
+* every thread accesses different cache line at random
+* warp has to be replayed 31 times to complete 1 instruction
+
+[/column]
+
+[/columns]
+
+</center>
+
+
+## Summary Architecture
+
+<center>
+* **GPUs are complicated beasts**
+
+* **massive parallel compute power** 
+
+* **massive ways to kill performance**
+</center>
+
+# What can you use today?
+
+## A Word of Warning!
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-6"]
+
+<!-- https://pixabay.com/p-42657/?no_redirect -->
+![](img/800x_warning-42657_1280.png)
+
+[/column]
+
+[column,class="col-xs-6"]
+
+<center>
+**Never ever program GPGPUs!**  
+</center>
+
+. . .
+
+
+* 32 threads is the minimum you get
+
+* good tools are rare and almost never portable
+
+. . .
+
+<center>
+**Use a Library!**
+
+</center>
 
 [/column]
 
 [/columns]
 
 
+## Vendor Libraries
 
-# What can you use today
+<center>
 
-## A Word of Warning!
+[columns,class="row vertical-align"]
 
-## CUDA
+[column,class="col-xs-6"]
+
+[**CUDA**](https://developer.nvidia.com/gpu-accelerated-libraries)
+
+[/column]
+
+
+[column,class="col-xs-6"]
+
+[**OpenCL**](http://developer.amd.com/tools-and-sdks/opencl-zone/acl-amd-compute-libraries/)
+
+[/column]
+
+[/columns]
+
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-6"]
+
+* cuBLAS
+* cuFFT
+* cuDNN
+* cuSparse
+* cuSolver
+* cuRAND  
+...
+
+[/column]
+
+[column,class="col-xs-6"]
+
+* clBLAS
+* clFFT
+* clSparse
+* clRNG  
+...
+
+[/column]
+
+[/columns]
+
+</center>
+
+## Domain Libraries
+
+
+<center>
+
+* Linear Algrebra: [VexCL](https://github.com/ddemidov/vexcl), [ViennaCL](http://viennacl.sourceforge.net/), ...
+
+* Image/Video Processing: [OpenCV](http://opencv.org/), [Ffmpeg](http://ffmpeg.org/), ...
+
+* Machine Learning: [Caffe](http://caffe.berkeleyvision.org/), [Torch](http://torch.ch/), ...
+
+* Bioinformatics: [SeqAn](http://www.seqan.de/), [nvbio](https://github.com/NVlabs/nvbio), ... 
+
+</center>
+
+. . .
+
+<center>
+
+**Any scientific field near you!**
+
+</center>
+
+## CUDA Overview
+
+
+## CUDA Hello World
+
+<center>
+
+**Vector Sum**  
+
+1. Declare and allocate host and device memory.
+1. Initialize host data.
+1. Transfer data from the host to the device.
+1. Execute one or more kernels.
+1. Transfer results from the device to the host.
+</center>
+
+. . .
+
+<center>
+**Easy!**
+</center>
+
+
+## CUDA Hello World
+
+```
+int main(void)
+{
+  int N = 1<<20;
+  float *x, *y, *d_x, *d_y;
+  x = (float*)malloc(N*sizeof(float));
+  y = (float*)malloc(N*sizeof(float));
+
+  cudaMalloc(&d_x, N*sizeof(float)); 
+  cudaMalloc(&d_y, N*sizeof(float));
+
+  for (int i = 0; i < N; i++) {
+    x[i] = 1.0f;
+    y[i] = 2.0f;
+  }
+
+  cudaMemcpy(d_x, x, N*sizeof(float),
+	         cudaMemcpyHostToDevice);
+  cudaMemcpy(d_y, y, N*sizeof(float),
+	         cudaMemcpyHostToDevice);
+
+  // Perform SAXPY on 1M elements
+  saxpy<<<(N+255)/256, 256>>>(N, 2.0f, d_x, d_y);
+
+  cudaMemcpy(y, d_y, N*sizeof(float),
+		     cudaMemcpyDeviceToHost);
+
+  float maxError = 0.0f;
+  for (int i = 0; i < N; i++)
+    maxError = max(maxError, abs(y[i]-4.0f));
+  printf("Max error: %fn", maxError);
+}
+
+//
+
+__global__
+void saxpy(int n, float a, float *x, float *y)
+{
+  int i = blockIdx.x*blockDim.x + threadIdx.x;
+  if (i < n) y[i] = a*x[i] + y[i];
+}
+```
+
 
 ## OpenCL
 
