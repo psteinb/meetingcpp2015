@@ -67,69 +67,11 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 
 ## Why all the fuzz??
 
+
 <center>
 ![](data/201x_acc_fraction_1200x.png)  
 Data obtained from [Top500.org](www.Top500.org)
 </center>
-
-## Food Hunt
-
-[columns,class="row vertical-align"]
-
-[column,class="col-xs-6"]
-
-<!-- https://commons.wikimedia.org/wiki/File:Thunnus_orientalis_(Osaka_Kaiyukan_Aquarium).jpg -->
-<center>
-Tuna  
-![](img/1024px-Thunnus_orientalis_Osaka_Kaiyukan_Aquarium.jpg)  
-(fast, single, versatile)
-</center>
-
-[/column]
-
-. . .
-
-[column,class="col-xs-6"]
-
-<!-- TODO -->
-<center>
-Forage Fish  
-![](img/forage_fish.jpg)
-(small, many, use wakefield of neighbor)
-</center>
-
-[/column]
-
-[/columns]
-
-
-
-## The same principle on die
-
-[columns,class="row vertical-align"]
-
-[column,class="col-xs-6"]
-
-<!-- TODO -->
-<center>
-CPU  
-![](img/Central-Processing-Unit_x600.jpeg)
-</center>
-
-[/column]
-
-[column,class="col-xs-6"]
-
-<!-- TODO -->
-<center>
-GPU  
-![](img/titan_x_small_x600.png)
-</center>
-
-[/column]
-
-[/columns]
-
 
 ## Vendor Options
 
@@ -252,16 +194,66 @@ Intel Xeon Phi 5110P
 ## { data-background="img/1200x_islay_overbright_annotated.png" data-background-size="1200px" }
 
 
+## Food Hunt
 
-## For simplicity ... 
+[columns,class="row vertical-align"]
 
+[column,class="col-xs-6"]
+
+<!-- https://commons.wikimedia.org/wiki/File:Thunnus_orientalis_(Osaka_Kaiyukan_Aquarium).jpg -->
 <center>
-![](img/Nvidia-Tesla-K80_x400.jpg)
-
-All illustrations based on Nvidia Kepler Architecture  
-(dominant GPU architecture in HPC installations)
+Tuna  
+![](img/1024px-Thunnus_orientalis_Osaka_Kaiyukan_Aquarium_cropped_x400.jpg)  
+(fast, single, versatile)
 </center>
 
+[/column]
+
+
+[column,class="col-xs-6"]
+
+<!-- https://commons.wikimedia.org/wiki/File:School_of_Pterocaesio_chrysozona_in_Papua_New_Guinea_1.jpg -->
+<center>
+Forage Fish  
+![](img/1024px-School_of_Pterocaesio_chrysozona_in_Papua_New_Guinea_1_x400.jpg)  
+(small, many, use wakefield of neighbor)
+</center>
+
+[/column]
+
+[/columns]
+
+
+
+## The same principle on die
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-6"]
+
+<!-- TODO -->
+<center>
+CPU  
+![](img/Central-Processing-Unit_x400.jpeg)
+</center>
+
+[/column]
+
+[column,class="col-xs-6"]
+
+<!-- TODO -->
+<center>
+GPU  
+![](img/Nvidia-Tesla-K80_x400.jpg)
+</center>
+
+[/column]
+
+[/columns]
+
+<center>
+Note: Will use Nvidia Kepler as example without loss of generality for GPGPU.
+</center>
 
 ## A more in-depth look
 
@@ -403,7 +395,7 @@ width="1400" border="0" >
 * hide (memory) latency by interleaving active warps
 
 
-## Best Practises: Data Locality
+## Note: Data Locality
 
 <center>
 [columns,class="row vertical-align"]
@@ -423,7 +415,7 @@ width="1400" border="0" >
 
 </center>
 
-## Best Practises: Memory Access
+## Note: Memory Access
 
 <center>
 **Good: Coalesced Memory Access**
@@ -516,31 +508,34 @@ width="1000" border="0" >
 [/columns]
 
 
-## Vendor Libraries
+## Use Libraries!
+
+[columns,class="row"]
+
+[column,class="col-xs-8"]
 
 <center>
-
-[columns,class="row vertical-align"]
-
-[column,class="col-xs-6"]
-
-[**CUDA**](https://developer.nvidia.com/gpu-accelerated-libraries)
+**Vendor sponsored**
+</center>
 
 [/column]
 
+[column,class="col-xs-4"]
 
-[column,class="col-xs-6"]
-
-[**OpenCL**](http://developer.amd.com/tools-and-sdks/opencl-zone/acl-amd-compute-libraries/)
+<center>
+**Open Source**
+</center>
 
 [/column]
 
 [/columns]
 
 
-[columns,class="row vertical-align"]
+[columns,class="row"]
 
-[column,class="col-xs-6"]
+[column,class="col-xs-4"]
+
+[CUDA](https://developer.nvidia.com/gpu-accelerated-libraries) based  
 
 * cuBLAS
 * cuFFT
@@ -552,7 +547,10 @@ width="1000" border="0" >
 
 [/column]
 
-[column,class="col-xs-6"]
+
+[column,class="col-xs-4"]
+
+[OpenCL](http://developer.amd.com/tools-and-sdks/opencl-zone/acl-amd-compute-libraries/) based  
 
 * clBLAS
 * clFFT
@@ -562,101 +560,149 @@ width="1000" border="0" >
 
 [/column]
 
+[column,class="col-xs-4"]
+
+* Linear Algrebra:  
+[VexCL](https://github.com/ddemidov/vexcl), [ViennaCL](http://viennacl.sourceforge.net/), ...
+
+* Image/Video Processing:  
+[OpenCV](http://opencv.org/), [Ffmpeg](http://ffmpeg.org/), ...
+
+* Machine Learning:  
+  [Caffe](http://caffe.berkeleyvision.org/), [Torch](http://torch.ch/), ...
+
+* Bioinformatics:  
+[SeqAn](http://www.seqan.de/), [nvbio](https://github.com/NVlabs/nvbio), ...
+
+[/column]
+
 [/columns]
 
-</center>
+## CUDA: Overview
 
-## Domain Libraries
+[columns,class="row vertical-align"]
 
-
-<center>
-
-* Linear Algrebra: [VexCL](https://github.com/ddemidov/vexcl), [ViennaCL](http://viennacl.sourceforge.net/), ...
-
-* Image/Video Processing: [OpenCV](http://opencv.org/), [Ffmpeg](http://ffmpeg.org/), ...
-
-* Machine Learning: [Caffe](http://caffe.berkeleyvision.org/), [Torch](http://torch.ch/), ...
-
-* Bioinformatics: [SeqAn](http://www.seqan.de/), [nvbio](https://github.com/NVlabs/nvbio), ... 
-
-</center>
-
-. . .
+[column,class="col-xs-8"]
 
 <center>
+**C**ompute **U**nified **D**evice **A**rchitecture  
+([Nvidia CUDA Zone](https://developer.nvidia.com/cuda-zone))
+</center>
 
-**Any scientific field near you!**
+[/column]
+
+[column,class="col-xs-4"]
+
+<center>
+![](img/NVIDIA-CUDA.jpg)
+</center>
+
+[/column]
+
+[/columns]
+
+<center>
+* freeware tool suite, gpu library package and low/high level API(s)
+
+* CUDA platform supports C, C++ and Fortran
+
+* binaries run on Nvidia hardware only
+
+* source code split into host and device part
+
+	* host: C++11 and STL supported
+
+	* device: subset of C++11 (no exceptions, no iostream, partial inheritance support)
 
 </center>
 
-## CUDA Overview
 
 
-## CUDA Hello World
+## CUDA Vector Sum
+
+&nbsp;
 
 <center>
+```a[i] = b[i] + d*a[i]```
+</center>
 
-**Vector Sum**  
+. . . 
 
+
+&nbsp;
+
+<center>
+**Simple 5 Steps**  
+</center>
+
+<center>
 1. Declare and allocate host and device memory.
 1. Initialize host data.
 1. Transfer data from the host to the device.
-1. Execute one or more kernels.
-1. Transfer results from the device to the host.
+1. Execute one or more kernels (vector sum).
+1. Transfer results from the device to the host.  
 </center>
-
-. . .
 
 <center>
-**Easy!**
+(Taken from [2012 parallel-for-all blog post](http://devblogs.nvidia.com/parallelforall/easy-introduction-cuda-c-and-c/))
 </center>
 
 
-## CUDA Hello World
+## CUDA Code
 
-```
+~~~~ {.cpp}
 int main(void)
 {
-  int N = 1<<20;
-  float *x, *y, *d_x, *d_y;
-  x = (float*)malloc(N*sizeof(float));
-  y = (float*)malloc(N*sizeof(float));
+  std::size_t vsize = (1<<20);
 
-  cudaMalloc(&d_x, N*sizeof(float)); 
-  cudaMalloc(&d_y, N*sizeof(float));
+  //..
 
-  for (int i = 0; i < N; i++) {
-    x[i] = 1.0f;
-    y[i] = 2.0f;
-  }
+  std::vector<float> host_a(vsize,1.f);
+  std::vector<float> host_b(vsize,2.f);
+  const float host_d = 42.f;
 
-  cudaMemcpy(d_x, x, N*sizeof(float),
-	         cudaMemcpyHostToDevice);
-  cudaMemcpy(d_y, y, N*sizeof(float),
-	         cudaMemcpyHostToDevice);
+  //gpu relevant code
+  float * device_a=nullptr, *device_b=nullptr;
 
-  // Perform SAXPY on 1M elements
-  saxpy<<<(N+255)/256, 256>>>(N, 2.0f, d_x, d_y);
+  const std::size_t vsize_byte=vsize*sizeof(float);
 
-  cudaMemcpy(y, d_y, N*sizeof(float),
-		     cudaMemcpyDeviceToHost);
+  //allocate memory
+  cudaMalloc(&device_a, vsize_byte); 
+  cudaMalloc(&device_b, vsize_byte);
 
-  float maxError = 0.0f;
-  for (int i = 0; i < N; i++)
-    maxError = max(maxError, abs(y[i]-4.0f));
-  printf("Max error: %fn", maxError);
+  //transfer memory
+  cudaMemcpy(device_a, &host_a[0], vsize_byte,
+             cudaMemcpyHostToDevice);
+  cudaMemcpy(device_b, &host_b[0], vsize_byte,
+			 cudaMemcpyHostToDevice);
+
+  //dispatch to device
+  vector_sum<<<(vsize+255)/256, 256>>>(vsize,
+					     host_d,
+					     device_a,
+					     device_b);
+
+  //transfer memory back
+  cudaMemcpy(&host_a[0], device_a, vsize_byte,
+             cudaMemcpyDeviceToHost);
+
+  //...
+
+  cudaFree(device_a);
+  cudaFree(device_b);
+  return 0;
 }
 
-//
-
-__global__
-void saxpy(int n, float a, float *x, float *y)
-{
-  int i = blockIdx.x*blockDim.x + threadIdx.x;
-  if (i < n) y[i] = a*x[i] + y[i];
+//above main
+__global__ void vector_sum(std::size_t _size,
+			   float _scale,
+			   float* _a,
+			   float* _b){
+  std::size_t index = blockIdx.x*blockDim.x + threadIdx.x;
+  if (index < _size)
+    _a[index] = _scale*_a[index] + _b[index];
 }
-```
-
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ## OpenCL
 
