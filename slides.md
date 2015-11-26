@@ -704,6 +704,43 @@ __global__ void vector_sum(std::size_t _size,
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+## CUDA Wrap-up
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-6"]
+
+<center>
+
+* free and working
+
+* CUDA comes with a ton of tools (debugger, profiler, libraries, ...)
+
+* CUDA so far allowed libraries to yield good performance
+
+* nVidia active in C++ standardization and inclusion of C++11 features
+</center>
+
+[/column]
+
+[column,class="col-xs-6"]
+
+<center>
+* cuda itself is a plain C api (memory allocation, error handling, asynchronous calls, ...)
+
+* grid dispatch is error prone (code repetition in index calculation)
+
+* compiler is sometimes hard to come by (using boost)
+
+* ```__global__``` identifiers prevent good design (maintainability)
+</center>
+
+[/column]
+
+[/columns]
+
+
+
 ## OpenCL
 
 ## thrust
