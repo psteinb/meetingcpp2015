@@ -17,13 +17,13 @@ date: Meeting C++, December 05, 2015
 
 [column,class="col-xs-6"]
 
-![](img/OpenGL_Nov14/OpenGL_White_500px_Nov14.png)
+![](img/OpenGL_White_500px_Nov14.png)
 
 [/column]
 
 [column,class="col-xs-6"]
 
-![](img/Vulkan_Mar15/Vulkan_White_500px_Mar15.png)
+![](img/Vulkan_White_500px_Mar15.png)
 
 [/column]
 
