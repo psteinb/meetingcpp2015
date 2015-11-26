@@ -378,6 +378,8 @@ height="200" border="0" >
 
 . . .
 
+&nbsp;
+
 [columns,class="row vertical-align"]
 
 [column,class="col-xs-12"]
@@ -391,6 +393,10 @@ width="1400" border="0" >
 [/column]
 
 [/columns]
+
+
+&nbsp;
+
 
 * hide (memory) latency by interleaving active warps
 
@@ -512,7 +518,7 @@ width="1000" border="0" >
 
 [columns,class="row"]
 
-[column,class="col-xs-8"]
+[column,class="col-xs-6"]
 
 <center>
 **Vendor sponsored**
@@ -520,7 +526,7 @@ width="1000" border="0" >
 
 [/column]
 
-[column,class="col-xs-4"]
+[column,class="col-xs-6"]
 
 <center>
 **Open Source**
@@ -533,8 +539,9 @@ width="1000" border="0" >
 
 [columns,class="row"]
 
-[column,class="col-xs-4"]
+[column,class="col-xs-3 text-right"]
 
+<center>
 [CUDA](https://developer.nvidia.com/gpu-accelerated-libraries) based  
 
 * cuBLAS
@@ -545,11 +552,14 @@ width="1000" border="0" >
 * cuRAND  
 ...
 
+</center>
+
 [/column]
 
 
-[column,class="col-xs-4"]
+[column,class="col-xs-3"]
 
+<center>
 [OpenCL](http://developer.amd.com/tools-and-sdks/opencl-zone/acl-amd-compute-libraries/) based  
 
 * clBLAS
@@ -558,10 +568,15 @@ width="1000" border="0" >
 * clRNG  
 ...
 
+</center>
+
+
+
 [/column]
 
-[column,class="col-xs-4"]
+[column,class="col-xs-6"]
 
+<center>
 * Linear Algrebra:  
 [VexCL](https://github.com/ddemidov/vexcl), [ViennaCL](http://viennacl.sourceforge.net/), ...
 
@@ -574,11 +589,13 @@ width="1000" border="0" >
 * Bioinformatics:  
 [SeqAn](http://www.seqan.de/), [nvbio](https://github.com/NVlabs/nvbio), ...
 
+</center>
+
 [/column]
 
 [/columns]
 
-## CUDA: Overview
+## CUDA Overview
 
 [columns,class="row vertical-align"]
 
@@ -610,9 +627,10 @@ width="1000" border="0" >
 
 * source code split into host and device part
 
-	* host: C++11 and STL supported
+		* host: C++11 and STL supported
 
-	* device: subset of C++11 (no exceptions, no iostream, partial inheritance support)
+		* device: subset of C++11
+		  (no exceptions, no iostream, no inheritance support, no STL)
 
 </center>
 
@@ -632,7 +650,7 @@ width="1000" border="0" >
 &nbsp;
 
 <center>
-**Simple 5 Steps**  
+**[Simple 5 Steps](http://devblogs.nvidia.com/parallelforall/easy-introduction-cuda-c-and-c/)**  
 </center>
 
 <center>
@@ -641,10 +659,6 @@ width="1000" border="0" >
 1. Transfer data from the host to the device.
 1. Execute one or more kernels (vector sum).
 1. Transfer results from the device to the host.  
-</center>
-
-<center>
-(Taken from [2012 parallel-for-all blog post](http://devblogs.nvidia.com/parallelforall/easy-introduction-cuda-c-and-c/))
 </center>
 
 
@@ -706,33 +720,45 @@ __global__ void vector_sum(std::size_t _size,
 
 ## CUDA Wrap-up
 
-[columns,class="row vertical-align"]
+[columns,class="row"]
 
-[column,class="col-xs-6"]
+[column,class="col-xs-6 text-success"]
 
 <center>
 
-* free and working
+* _free and working_
 
-* CUDA comes with a ton of tools (debugger, profiler, libraries, ...)
+* CUDA comes with a _ton of tools_  
+(debugger, profiler, libraries, ...)
 
-* CUDA so far allowed libraries to yield good performance
+* CUDA comes with a _ton of examples_ 
 
-* nVidia active in C++ standardization and inclusion of C++11 features
+* very _flexible_ (device instrinsics, locked memory handling, ...)
+
+* *nVidia very active* in porting scientific applications
+
+* *nVidia very active* C++ standardisation (Parallelism TS)
+
 </center>
 
 [/column]
 
-[column,class="col-xs-6"]
+. . . 
+
+[column,class="col-xs-6 text-warning"]
 
 <center>
-* cuda itself is a plain C api (memory allocation, error handling, asynchronous calls, ...)
 
-* grid dispatch is error prone (code repetition in index calculation)
+* plain C API  
+(memory allocation, error handling, asynchronous calls, ...)
 
-* compiler is sometimes hard to come by (using boost)
+* grid dispatch is error prone  
+(code repetition in index calculation)
 
-* ```__global__``` identifiers prevent good design (maintainability)
+* compiler is sometimes hard to come by (using boost, OpenMP interoperability)
+
+* ```__keyword__``` disrupt good design (maintainability)
+
 </center>
 
 [/column]
@@ -740,12 +766,181 @@ __global__ void vector_sum(std::size_t _size,
 [/columns]
 
 
-
 ## OpenCL
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-6"]
+
+<center>
+**Open C**ompute **L**anguage  
+([khronos.org/opencl](https://www.khronos.org/opencl/))
+</center>
+
+[/column]
+
+[column,class="col-xs-4 bg-primary"]
+
+<center>
+_No Logo due to Apple's Copyright_
+</center>
+
+[/column]
+
+[/columns]
+
+&nbsp;
+
+<center>
+* open, royalty-free standard for cross-platform, parallel programming
+
+* designed to run on CPUs, GPUs, FPGAs, DSPs, ...
+
+* maintained by non-profit technology consortium Khronos Group
+
+* source code split into host and device part
+
+		* device: C99 derived language
+
+		* host: C/C++ based API for management, transfers, error handling, ...
+</center>
+
+## OpenCL Kernel
+
+~~~~ {.cpp}
+const char *kernelSource =                     "\n" \
+"__kernel void vecAdd(  __global float *a,      \n" \
+"                       __global float *b,      \n" \
+"                       __global float *c,      \n" \
+"                       const unsigned int n)   \n" \
+"{                                              \n" \
+"    int id = get_global_id(0);                 \n" \
+"                                               \n" \
+"    //Make sure we do not go out of bounds     \n" \
+"    if (id < n)                                \n" \
+"        c[id] = a[id] + b[id];                 \n" \
+"}                                              \n" \
+                                               "\n" ;
+~~~~
+<center>
+from [www.olcf.ornl.gov](https://www.olcf.ornl.gov/tutorials/opencl-vector-addition/)
+</center>
 
 ## thrust
 
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-6"]
+
+<center>
+_parallel algorithms library which resembles the C++ Standard Template Library (STL)_
+</center>
+
+[/column]
+
+[column,class="col-xs-4"]
+
+<center>
+![](img/thrust_logo.png)  
+[thrust.github.io](http://thrust.github.io/)
+</center>
+
+[/column]
+
+[/columns]
+
+&nbsp;
+
+<center>
+* open source (Apache v2 license)
+
+* interoperability with CUDA, TBB and OpenMP (possible backends)
+
+* high level interface compared to CUDA/OpenCL
+</center>
+
+
+## thrust Vector ADD
+
+~~~ {.cpp}
+struct saxpy_functor : public thrust::binary_function<float,float,float>
+{
+    const float a;
+
+    saxpy_functor(float _a) : a(_a) {}
+
+	__host__ __device__
+        float operator()(const float& x, const float& y) const { 
+            return a * x + y;
+        }
+};
+
+int main(//...){
+
+  thrust::host_vector<float> host_a(N,1.f);
+  thrust::host_vector<float> host_b(N,2.f);
+  const float scale = 42.f;
+
+  thrust::device_vector<float> dev_a = host_a;
+  thrust::device_vector<float> dev_b = host_b;
+
+  thrust::transform(dev_a.begin(), dev_a.end(),  // input range #1
+		    dev_b.begin(),           // input range #2
+		    dev_a.begin(),           // output range
+		    saxpy_functor(scale));        
+
+  //thrust::transform(thrust::omp::par,
+				dev_a.begin(), dev_a.end(),  // input range #1
+				dev_b.begin(),           // input range #2
+				dev_a.begin(),           // output range
+				saxpy_functor(scale));        
+  	
+}
+~~~
+
+## thrust Wrap-up
+
+[columns,class="row"]
+
+[column,class="col-xs-6 text-success"]
+
+<center>
+* C++ and STL for GPUs
+
+* container and algorithm API well thought through 
+
+* code becomes readable (for a C++Dev)
+
+* algorithms can be dispatched from device kernels as well
+
+* many examples, active community
+</center>
+
+[/column]
+
+. . . 
+
+[column,class="col-xs-6 text-warning"]
+
+<center>
+* loss of flexibility  
+(pinned host vectors considered experimental)
+
+* index information lost during functor invocation
+
+* exploiting device memory hierarchy remains manual work 
+
+* C++11, C++17 ?
+</center>
+
+[/column]
+
+[/columns]
+
+
 ## C++AMP and HC
+
+
 
 ## Pragma Mafia
 
@@ -765,3 +960,5 @@ __global__ void vector_sum(std::size_t _size,
 
 
 # Backup
+
+
