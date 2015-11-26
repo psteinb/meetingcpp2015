@@ -7,7 +7,10 @@ PDF_FILES=$(SRC_FILES:.tex=.svg)
 all : $(SVG_FILES) $(PDF_FILES)
 
 %.pdf : %.tex
-	pdflatex $<
+	pdflatex $< 
 
 %.svg : %.pdf
 	pdf2svg $< $@
+
+clean:
+	rm -rf *aux *log *svg *pdf

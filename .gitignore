@@ -30,3 +30,5 @@
 *.out
 *.app
 
+figures/*aux
+figures/*log
