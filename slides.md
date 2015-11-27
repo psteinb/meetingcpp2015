@@ -943,8 +943,73 @@ int main(//...){
 [/columns]
 
 
-## C++AMP and HC
+## HCC
 
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-6"]
+
+<center>
+**H**eterogenous **C**ompute **C**ompiler  
+([cppamp-driver-ng-35](https://bitbucket.org/multicoreware/cppamp-driver-ng-35/wiki/Home))
+</center>
+
+[/column]
+
+[column,class="col-xs-4 bg-primary"]
+
+<center>
+![](img/apu_comic.gif)  
+motivated by **A**ll-purpose Graphics **P**rocessing **U**nits
+</center>
+
+[/column]
+
+[/columns]
+
+* single source C++ compiler (for CPU, GPU and APU targets)
+
+* supports (derived) C++AMP standard, OpenMP 4, C++1*
+
+* currently being ported to discrete GPUs
+
+* very young project [presented](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0069r0.pdf) in Kona 
+
+## HCC Vector Sum
+
+`hc` = C++AMP derived standard to fill in APU features
+
+``` {.cpp}
+
+```
+
+## HCC Wrap-up
+
+[columns,class="row"]
+
+[column,class="col-xs-6 text-success"]
+
+<center>
+
+* more
+
+</center>
+
+[/column]
+
+. . . 
+
+[column,class="col-xs-6 text-warning"]
+
+<center>
+
+* something
+
+</center>
+
+[/column]
+
+[/columns]
 
 
 ## Pragma Mafia
