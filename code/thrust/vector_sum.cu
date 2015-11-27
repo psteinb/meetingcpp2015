@@ -1,6 +1,6 @@
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
-
+//#include <thrust/execution_policy.h>
 #include <thrust/functional.h>
 #include <thrust/transform.h>
 #include <iostream>
@@ -30,10 +30,16 @@ int main(int argc, char *argv[])
   thrust::device_vector<float> dev_b = host_b;
 
   thrust::transform(dev_a.begin(), dev_a.end(), // input range #1
-		    dev_b.begin(),              // input range #2
-		    dev_a.begin(),              // output range
-		    saxpy_functor(scale));      // placeholder expression
-
+  		    dev_b.begin(),              // input range #2
+  		    dev_a.begin(),              // output range
+  		    saxpy_functor(scale));      // placeholder expression
+  
+  // thrust::transform(thrust::system::cuda::par,
+  // 		    dev_a.begin(), dev_a.end(), // input range #1
+  //    		    dev_b.begin(),              // input range #2
+  //    		    dev_a.begin(),              // output range
+  //    		    saxpy_functor(scale));      // placeholder expression
+		    
   host_a = dev_a;
   
   float max_error = 0.0f;
