@@ -891,7 +891,7 @@ int main(//...){
 		    dev_a.begin(),           // output range
 		    saxpy_functor(scale));        
 
-  //thrust::transform(thrust::omp::par,
+  //thrust::transform(thrust::system::cuda::par,
 				dev_a.begin(), dev_a.end(),  // input range #1
 				dev_b.begin(),           // input range #2
 				dev_a.begin(),           // output range
