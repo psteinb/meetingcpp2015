@@ -1336,7 +1336,7 @@ taken from concurrency TS
 [column,class="col-xs-4"]
 
 
-MPI CBG staff
+[MPI CBG](http://www.mpi-cbg.de)
 
 
 [/column]
@@ -1406,7 +1406,9 @@ MPI CBG staff
 
 ## Thank you!
 
-
+<center>
+![](img/Sleeping_students.jpg)
+</center>
 
 
 # Backup
