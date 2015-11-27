@@ -1224,7 +1224,7 @@ void vector_sum(float scale, std::vector<float>& a,
 }
 ~~~~
 
-## Khronos Group based
+## based on OpenCL
 
 <center>
 ![](img/khronos_road_map.png)  
@@ -1233,7 +1233,7 @@ from [SIGGRAPH Asia 11/2015](https://www.khronos.org/assets/uploads/developers/l
 **Take away**: SPIR-V promising, SYCL very similar to boost.compute
 </center>
 
-## Nvidia based
+## based on CUDA
 
 <center>
 ![](img/gtc2015_mark_harris_beyond_cuda7.png)  
@@ -1245,12 +1245,167 @@ from [GTC 2015](http://on-demand.gputechconf.com/gtc/2015/presentation/S5820-Mar
 
 ## C++17
 
+[columns,class="row vertical-align"]
 
+[column,class="col-xs-6"]
+
+<center>
+Published already:
+
+* [Parallelism TS](https://github.com/cplusplus/parallelism-ts)
+
+* [Concurrency TS](https://github.com/cplusplus/concurrency-ts)
+</center>
+
+[/column]
+
+[column,class="col-xs-4"]
+
+<center>
+[![](img/logo-cpp.jpg)](https://isocpp.org)  
+</center>
+
+[/column]
+
+[/columns]
+
+~~~ {.cpp}
+using namespace std::experimental::parallel;
+
+transform(	par,
+			std::begin(a), std::end(a),
+			std::begin(b),
+			std::begin(a)
+			[&](float& a, const float& b) {
+				a = scale*a + b;
+			}
+		 );
+~~~
+
+## C++17 GPU excitement
+
+. . .
+
+~~~ {.cpp}
+future<int> f1 = copy_to_device();
+future<int> f2 = f1.then([](future<int> f) {
+                    future<int> f3 = start_compute();
+                    return f3;
+					});
+future<int> f3 = f3.then([](future<int> f){
+					return copy_to_host();
+					}
+					);
+~~~
+<center>
+&nbsp;
+taken from concurrency TS
+
+* better API to coordinate asynchronous transfers and computations
+
+* future: use `(a)wait/then` and friends to express data dependencies
+
+* support of compiler vendors needed (Nvidia, HSA, ...)
+</center>
 
 
 # Summary
 
-## Image References
+## GPUs today convert workstations to compute clusters, and clusters to supercomputers!
+
+. . .
+
+&nbsp;
+<center>
+* GPUs architecture is complex: obtaining max. performance challenging
+
+* GPU programming today has clear C legacy of early days
+
+* performant, flexible and maintainable APIs slowly emerging
+
+</center>
+
+
+
+## Acknowledgements
+
+<center>
+
+[columns,class="row"]
+
+[column,class="col-xs-4"]
+
+
+MPI CBG staff
+
+
+[/column]
+
+
+[column,class="col-xs-8"]
+
+*Jeff Oegema, Ian Henry, ...*
+
+[/column]
+
+[/columns]
+
+
+[columns,class="row"]
+
+[column,class="col-xs-4"]
+
+[GPU Center of Excellence](http://ccoe-dresden.de/)
+
+[/column]
+
+[column,class="col-xs-8"]
+
+*Michael Bussmann, Guido Juckeland, ...*
+
+[/column]
+
+[/columns]
+
+
+[columns,class="row"]
+
+[column,class="col-xs-4"]
+
+[AMD](http://amd.com/); [Multicoreware](http://www.multicorewareinc.com/)
+
+[/column]
+
+[column,class="col-xs-8"]
+
+*Greg Stoner, Ben Sander, Chan SiuChi; Jack Chung*
+
+[/column]
+
+[/columns]
+
+[columns,class="row"]
+
+[column,class="col-xs-4"]
+
+[nVidia](http://nvidia.com/)
+
+[/column]
+
+[column,class="col-xs-8"]
+
+*Axel Köhler*
+
+[/column]
+
+[/columns]
+
+
+</center>
+
+
+## Thank you!
+
 
 
 
