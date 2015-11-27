@@ -80,7 +80,7 @@ Data obtained from [Top500.org](www.Top500.org)
 ## Vendor Options
 
 <!-- TODO: image origins -->
-[columns,class="row vertical-align"]
+[columns,class="row"]
 
 [column,class="col-xs-4"]
 
@@ -127,7 +127,7 @@ Not Covered Today!
 
 <center>
 _Nvidia Tesla K80_ 
-![](img/Nvidia-Tesla-K80_x200.jpg)
+![](img/Nvidia-Tesla-K80_x400.jpg)
 </center>
 
 [/column]
@@ -136,7 +136,7 @@ _Nvidia Tesla K80_
 
 <center>
 _AMD FirePro S9170_
-![](img/amd-firepro-s9150-server-graphics_x200.png)
+![](img/amd-firepro-s9150-server-graphics_x400.png)
 </center>
 
 [/column]
@@ -145,43 +145,50 @@ _AMD FirePro S9170_
 
 <center>
 Intel Xeon Phi 5110P
-![](img/xeon_phi_x200.jpg)
+![](img/xeon_phi_x400.jpg)
 </center>
 
 [/column]
 
 [/columns]
 
+&nbsp;
 
 [columns,class="row vertical-align"]
 
 [column,class="col-xs-4"]
 
+<center>
 * 2x GK210 chipsets
-* 2x 12 GB GDDR5 RAM
+* 2x 12 GB GDDR5
 * 2x 288 GB/s to RAM
 * 8.7 TFlops SP
 * 2.9 TFlops DP
+</center>
 
 [/column]
 
 [column,class="col-xs-4"]
 
+<center>
 * 1x Grenada XT
 * 32 GB GDDR5 RAM
 * 320 GB/s to RAM
 * 5.2 TFlops SP
 * 2.6 TFlops DP
+</center>
 
 [/column]
 
 [column,class="col-xs-4"]
 
+<center>
 * 62x x86 CPUs
 * 8 GB GDDR5 RAM
 * 320 GB/s to RAM
 * 2.1 TFlops SP
 * 1.1 TFlops DP
+</center>
 
 [/column]
 
@@ -280,7 +287,7 @@ width="1600" border="0" style="background-color: #FFFFFF;">
 </div>
 
 <center>
-CUDA core: 1 fp32 ops / clock <!-- (1/3 fp64 ops / clock) -->
+CUDA core: 192 fp32 ops / clock <!-- (1/3 fp64 ops / clock) -->
 </center>
 
 
