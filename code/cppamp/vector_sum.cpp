@@ -5,24 +5,24 @@
 #include <cmath>
 #include "amp.h"
 
-template<typename _type>
-void amp_sum(std::vector<_type>& _va,
-	     const std::vector<_type>& _vb,
-	     _type _scale)
+void amp_sum(std::vector<float>& _va,
+	     const std::vector<float>& _vb,
+	     float _scale)
 {
 
-  concurrency::extent<1> e_a(_va.size()), e_b(_vb.size());
+  concurrency::extent<1> ext_a(_va.size()), ext_b(_vb.size());
 
-  concurrency::array_view<_type, 1> av_a(e_a, _va); 
-  concurrency::array_view<const _type, 1> av_b(e_b, _vb); 
+  concurrency::array_view<float, 1> 		view_a(ext_a, _va); 
+  concurrency::array_view<const float, 1>	view_b(ext_b, _vb); 
   
-  parallel_for_each(av_a.get_extent(), [=](concurrency::index<1> idx) restrict(amp)
+  parallel_for_each(view_a.get_extent(),
+		    [=](concurrency::index<1> idx) restrict(amp)
 		    {
-		      av_a[idx] = av_a[idx]*_scale + av_b[idx]  ;
+		      view_a[idx] = view_a[idx]*_scale + view_b[idx]  ;
 		    }
 		    );
 
-  av_a.synchronize();
+  view_a.synchronize();
 }
 
 int main(int argc, char *argv[])

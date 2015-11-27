@@ -865,14 +865,17 @@ _parallel algorithms library which resembles the C++ Standard Template Library (
 ## thrust Vector ADD
 
 ~~~ {.cpp}
-struct saxpy_functor : public thrust::binary_function<float,float,float>
+struct saxpy_functor :
+public thrust::binary_function<float,float,float>
 {
     const float a;
 
     saxpy_functor(float _a) : a(_a) {}
 
 	__host__ __device__
-        float operator()(const float& x, const float& y) const { 
+    float operator()(const float& x,
+					 const float& y
+					) const { 
             return a * x + y;
         }
 };
@@ -886,16 +889,18 @@ int main(//...){
   thrust::device_vector<float> dev_a = host_a;
   thrust::device_vector<float> dev_b = host_b;
 
-  thrust::transform(dev_a.begin(), dev_a.end(),  // input range #1
-		    dev_b.begin(),           // input range #2
-		    dev_a.begin(),           // output range
-		    saxpy_functor(scale));        
+  thrust::transform(dev_a.begin(),
+					dev_a.end(), 
+					dev_b.begin(),
+				    dev_a.begin(),
+				    saxpy_functor(scale));
 
   //thrust::transform(thrust::system::cuda::par,
-				dev_a.begin(), dev_a.end(),  // input range #1
-				dev_b.begin(),           // input range #2
-				dev_a.begin(),           // output range
-				saxpy_functor(scale));        
+  //			dev_a.begin(), dev_a.end(),
+  //			dev_b.begin(),
+  //			dev_a.begin(),
+  //			saxpy_functor(scale)
+  //			);        
   	
 }
 ~~~
@@ -956,11 +961,12 @@ int main(//...){
 
 [/column]
 
-[column,class="col-xs-4 bg-primary"]
+[column,class="col-xs-4"]
 
 <center>
+meant for   
 ![](img/apu_comic.gif)  
-motivated by **A**ll-purpose Graphics **P**rocessing **U**nits
+**A**ll-purpose G**PU**s
 </center>
 
 [/column]
@@ -969,18 +975,35 @@ motivated by **A**ll-purpose Graphics **P**rocessing **U**nits
 
 * single source C++ compiler (for CPU, GPU and APU targets)
 
-* supports (derived) C++AMP standard, OpenMP 4, C++1*
+* supports C++AMP 1.2, HC, OpenMP 4, C++1x
 
 * currently being ported to discrete GPUs
 
 * very young project [presented](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0069r0.pdf) in Kona 
 
-## HCC Vector Sum
-
-`hc` = C++AMP derived standard to fill in APU features
+## HCC Vector Sum (C++AMP)
 
 ``` {.cpp}
+void amp_sum(std::vector<float>& _va,
+	     const std::vector<float>& _vb,
+	     float _scale){
+		 
+  concurrency::extent<1> ext_a(_va.size()),
+						 ext_b(_vb.size());
 
+  concurrency::array_view<float, 1> 	  view_a(ext_a, _va); 
+  concurrency::array_view<const float, 1> view_b(ext_b, _vb); 
+  
+  parallel_for_each(view_a.get_extent(),
+		    [=](concurrency::index<1> idx) restrict(amp)
+		    {
+		      view_a[idx] = view_a[idx]*_scale
+			  + view_b[idx]  ;
+		    }
+		    );
+
+  view_a.synchronize();
+}
 ```
 
 ## HCC Wrap-up
@@ -991,7 +1014,15 @@ motivated by **A**ll-purpose Graphics **P**rocessing **U**nits
 
 <center>
 
-* more
+* API focusses on problem-solving and flexibility
+
+* API appears to be lightweight (array views)
+
+* multiple binary backends (SPIR-V, OpenCL, ...)
+
+* multiple hardware backends (CPU, GPU, APU)
+
+* homogenous C++ source code
 
 </center>
 
@@ -1003,7 +1034,15 @@ motivated by **A**ll-purpose Graphics **P**rocessing **U**nits
 
 <center>
 
-* something
+* young project, API still fluid (`concurrency::` vs. `hc::`)
+
+* no tooling yet (debugger, profiler, ...)
+
+* performance unclear
+
+* combined API for integrated and discrete GPUs
+
+* HSA/AMD road map unclear
 
 </center>
 
