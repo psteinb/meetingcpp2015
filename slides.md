@@ -973,6 +973,7 @@ meant for
 
 [/columns]
 
+<center>
 * single source C++ compiler (for CPU, GPU and APU targets)
 
 * supports C++AMP 1.2, HC, OpenMP 4, C++1x
@@ -980,6 +981,7 @@ meant for
 * currently being ported to discrete GPUs
 
 * very young project [presented](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0069r0.pdf) in Kona 
+</center>
 
 ## HCC Vector Sum (C++AMP)
 
@@ -991,8 +993,10 @@ void amp_sum(std::vector<float>& _va,
   concurrency::extent<1> ext_a(_va.size()),
 						 ext_b(_vb.size());
 
-  concurrency::array_view<float, 1> 	  view_a(ext_a, _va); 
-  concurrency::array_view<const float, 1> view_b(ext_b, _vb); 
+  concurrency::array_view<float, 1> 	  view_a(ext_a,
+												 _va); 
+  concurrency::array_view<const float, 1> view_b(ext_b,
+												 _vb); 
   
   parallel_for_each(view_a.get_extent(),
 		    [=](concurrency::index<1> idx) restrict(amp)
@@ -1038,7 +1042,7 @@ void amp_sum(std::vector<float>& _va,
 
 * no tooling yet (debugger, profiler, ...)
 
-* performance unclear
+* performance yield unclear
 
 * combined API for integrated and discrete GPUs
 
@@ -1051,15 +1055,197 @@ void amp_sum(std::vector<float>& _va,
 [/columns]
 
 
-## Pragma Mafia
+## Pragma based approaches
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-6"]
+
+<center>
+**Open M**ulti-**P**rocessing  
+([openmp.org](http://openmp.org/))
+</center>
+
+[/column]
+
+[column,class="col-xs-4"]
+
+<center>
+![](img/OpenMP_logo.png)  
+</center>
+
+[/column]
+
+[/columns]
+
+~~~~ {.cpp}
+void vector_sum(int size, float scale,
+				float * restrict a, float * restrict b) {
+	#pragma omp target map(to:b[0:n], size, scale) map(a[0:n])
+	{
+		#pragma omp parallel for
+		for (int i=0; i<size; i++) {
+			a[i] = a[i] * scale + b[i];
+		}
+	}
+}
+~~~~
+<center>
+heterogenous accelerator support since version 4.0 (available in [gcc 5.0+](https://gcc.gnu.org/wiki/Offloading))
+</center>
+
+## Pragma based continued
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-6"]
+
+<center>
+**Open Acc**elerator  
+([openacc.org](http://openacc.org/))
+</center>
+
+[/column]
+
+[column,class="col-xs-4"]
+
+<center>
+![](img/openacc_logo.jpg)  
+</center>
+
+[/column]
+
+[/columns]
+
+~~~~ {.cpp}
+void vector_sum(int size, float scale, float *a, float *b) {
+
+	#pragma acc parallel copy(a[0:size]) copyin(b[0:size])
+	#pragma acc loop
+	for (int i = 0; i < size; ++i)
+		a[i] = scale*a[i] + b[i];
+	
+}
+~~~~
+
+<center>
+(partially available in [gcc 5.0+](https://gcc.gnu.org/wiki/Offloading),  
+fully in [pgi](https://www.pgroup.com/resources/accel.htm) compiler)
+</center>
+
+## Pragma Wrap-up
+
+[columns,class="row"]
+
+[column,class="col-xs-6 text-success"]
+
+<center>
+
+* OpenMP is (already) a success story  
+(why not OpenACC as well)
+
+* dream: one-line injection and code is fast
+
+* strong industrial support (tooling)
+
+</center>
+
+[/column]
+
+. . . 
+
+[column,class="col-xs-6 text-warning"]
+
+<center>
+
+* OpenMP works because of shared memory parallelism on CPU
+
+* GPUs have different architecture than CPUs
+
+* language in a language ??
+
+* OpenACC, OpenMP dichotomy (will users loose?)
+
+</center>
+
+[/column]
+
+[/columns]
+
 
 # What can you use tomorrow
 
 ## Boost.Compute
 
-## Sycle and Spear
+<center>
+* not yet part of boost library
+
+* OpenCL wrapper enabling vendor independent parallel algorithms
+
+* conceptually very similar to thrust/bolt
+
+* available on [github.com/boostorg/compute](https://github.com/boostorg/compute)
+</center>
+
+~~~~ {.cpp}
+void vector_sum(float scale, std::vector<float>& a,
+				const std::vector<float>& float b) {
+
+	compute::device gpu = compute::system::default_device();
+	compute::context ctx(gpu);
+    compute::command_queue queue(ctx, gpu);
+
+	compute::vector<float> device_a(a.size(), ctx);
+	compute::vector<float> device_b(b.size(), ctx);
+
+	compute::copy(
+		host_a.begin(), host_a.end(),
+		device_a.begin(), queue
+    );
+
+	compute::copy(
+		host_b.begin(), host_b.end(),
+		device_b.begin(), queue
+    );
+
+    compute::transform(
+        device_vector.begin(),
+        device_vector.end(),
+        device_vector.begin(),
+        compute::add<float>(),//or alike
+        queue
+    );
+
+    compute::copy(
+		device_a.begin(), device_a.end(),
+		host_a.begin(), queue
+    );
+
+}
+~~~~
+
+## Khronos Group based
+
+<center>
+![](img/khronos_road_map.png)  
+from [SIGGRAPH Asia 11/2015](https://www.khronos.org/assets/uploads/developers/library/2015-sigasia/SIGGRAPH-Asia_Nov15.pdf)  
+
+**Take away**: SPIR-V promising, SYCL very similar to boost.compute
+</center>
+
+## Nvidia based
+
+<center>
+![](img/gtc2015_mark_harris_beyond_cuda7.png)  
+from [GTC 2015](http://on-demand.gputechconf.com/gtc/2015/presentation/S5820-Mark-Harris.pdf)  
+
+**Take away**: also fp16 support, but roadmap unclear
+</center>
+
 
 ## C++17
+
+
 
 
 # Summary

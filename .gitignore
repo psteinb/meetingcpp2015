@@ -33,3 +33,6 @@
 figures/*aux
 figures/*log
 data/Rplots.pdf
+/code/cuda/vector_sum
+/tools/filters/linkTable.hi
+/tools/filters/linkTable

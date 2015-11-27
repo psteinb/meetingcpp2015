@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
   std::vector<float> host_b(vector_size,2.f);
   const float host_d = 42.f;
 
+  concurrency::accelerator default_device;
   amp_sum(host_a,host_b,host_d);
     
   float max_error = 0.0f;
