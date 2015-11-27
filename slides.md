@@ -627,7 +627,7 @@ width="1000" border="0" >
 
 * source code split into host and device part
 
-		* host: C++11 and STL supported
+		* host  : C++11 and STL supported
 
 		* device: subset of C++11
 		  (no exceptions, no iostream, no inheritance support, no STL)
@@ -800,9 +800,11 @@ _No Logo due to Apple's Copyright_
 
 * source code split into host and device part
 
+		* host  : C/C++ based API (lower level than CUDA)
+
 		* device: C99 derived language
 
-		* host: C/C++ based API for management, transfers, error handling, ...
+
 </center>
 
 ## OpenCL Kernel
@@ -905,11 +907,11 @@ int main(//...){
 [column,class="col-xs-6 text-success"]
 
 <center>
-* C++ and STL for GPUs
+* C++ and STL for GPUs (and CPUs)!
 
 * container and algorithm API well thought through 
 
-* code becomes readable (for a C++Dev)
+* code becomes readable/maintainable (at least for a C++Dev)
 
 * algorithms can be dispatched from device kernels as well
 
@@ -923,12 +925,15 @@ int main(//...){
 [column,class="col-xs-6 text-warning"]
 
 <center>
-* loss of flexibility  
-(pinned host vectors considered experimental)
+* loss of flexibility:  
 
-* index information lost during functor invocation
+    * host-device i/o (pinned memory allocator considered experimental)
 
-* exploiting device memory hierarchy remains manual work 
+	* index information only available through kernel built-ins
+
+    * grid distpatch of kernel by thrust library (occupancy)
+
+* kernel optimisations with CUDA only ([CUB](https://nvlabs.github.io/cub/) library?)
 
 * C++11, C++17 ?
 </center>
