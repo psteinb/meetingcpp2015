@@ -10,7 +10,6 @@ date: Meeting C++, December 05, 2015
 # Disclaimer(s)
 
 
-
 ## No OpenGL/Vulkan here!
 
 [columns,class="row vertical-align"]
@@ -43,6 +42,8 @@ Feel free to reply, discuss, inform, correct, ...
 
 . . .  
 
+&nbsp;
+
 <center>
 If not stated otherwise, the slides and all it's code is licensed under
 
@@ -51,6 +52,8 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 
 
 ## Outline
+
+<div style="font-size : 1.5em">
 
 <center>
 1. Massively Parallel Programming
@@ -62,6 +65,7 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 4. What can you use tomorrow
 </center>
 
+</div>
 
 # Massively Parallel Programming
 
@@ -400,6 +404,11 @@ width="1400" border="0" >
 
 * hide (memory) latency by interleaving active warps
 
+* [Kepler](http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#multiprocessor-level):
+
+	* global memory access: 200-400 ticks per warp
+
+	* fp32 add/mul/fma: 1 tick per warp
 
 ## Note: Data Locality
 
@@ -484,8 +493,10 @@ width="1000" border="0" >
 
 [column,class="col-xs-6"]
 
+<center>
 <!-- https://pixabay.com/p-42657/?no_redirect -->
 ![](img/800x_warning-42657_1280.png)
+</center>
 
 [/column]
 
@@ -1188,40 +1199,16 @@ fully in [pgi](https://www.pgroup.com/resources/accel.htm) compiler)
 </center>
 
 ~~~~ {.cpp}
-void vector_sum(float scale, std::vector<float>& a,
-				const std::vector<float>& float b) {
-
 	compute::device gpu = compute::system::default_device();
 	compute::context ctx(gpu);
     compute::command_queue queue(ctx, gpu);
 
-	compute::vector<float> device_a(a.size(), ctx);
-	compute::vector<float> device_b(b.size(), ctx);
+	compute::vector<float> device_a(a.size(), ctx);//etc..
+	compute::copy(host_a.begin(), host_a.end(),
+		device_a.begin(), queue);//etc..
 
-	compute::copy(
-		host_a.begin(), host_a.end(),
-		device_a.begin(), queue
-    );
-
-	compute::copy(
-		host_b.begin(), host_b.end(),
-		device_b.begin(), queue
-    );
-
-    compute::transform(
-        device_vector.begin(),
-        device_vector.end(),
-        device_vector.begin(),
-        compute::add<float>(),//or alike
-        queue
-    );
-
-    compute::copy(
-		device_a.begin(), device_a.end(),
-		host_a.begin(), queue
-    );
-
-}
+    compute::transform(device_a.begin(),device_a.end(),
+        device_a.begin(),compute::add<float>(),queue);
 ~~~~
 
 ## based on OpenCL
@@ -1252,9 +1239,7 @@ from [GTC 2015](http://on-demand.gputechconf.com/gtc/2015/presentation/S5820-Mar
 <center>
 Published already:
 
-* [Parallelism TS](https://github.com/cplusplus/parallelism-ts)
-
-* [Concurrency TS](https://github.com/cplusplus/concurrency-ts)
+[Parallelism TS](https://github.com/cplusplus/parallelism-ts), [Concurrency TS](https://github.com/cplusplus/concurrency-ts)
 </center>
 
 [/column]
@@ -1269,10 +1254,10 @@ Published already:
 
 [/columns]
 
-~~~ {.cpp}
-using namespace std::experimental::parallel;
+&nbsp;
 
-transform(	par,
+~~~ {.cpp}
+transform(	std::experimental::parallel::par,
 			std::begin(a), std::end(a),
 			std::begin(b),
 			std::begin(a)
@@ -1342,7 +1327,7 @@ taken from concurrency TS
 [/column]
 
 
-[column,class="col-xs-8"]
+[column,class="col-xs-8 text-left"]
 
 *Jeff Oegema, Ian Henry, ...*
 
@@ -1359,7 +1344,7 @@ taken from concurrency TS
 
 [/column]
 
-[column,class="col-xs-8"]
+[column,class="col-xs-8 text-left"]
 
 *Michael Bussmann, Guido Juckeland, ...*
 
@@ -1376,7 +1361,7 @@ taken from concurrency TS
 
 [/column]
 
-[column,class="col-xs-8"]
+[column,class="col-xs-8 text-left"]
 
 *Greg Stoner, Ben Sander, Chan SiuChi; Jack Chung*
 
@@ -1392,7 +1377,7 @@ taken from concurrency TS
 
 [/column]
 
-[column,class="col-xs-8"]
+[column,class="col-xs-8 text-left"]
 
 *Axel Köhler*
 
