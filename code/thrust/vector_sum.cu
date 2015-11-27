@@ -6,8 +6,17 @@
 #include <iostream>
 #include <cstdint>
 
-// allows us to use "_1" instead of "thrust::placeholders::_1"
-using namespace thrust::placeholders;
+struct saxpy_functor : public thrust::binary_function<float,float,float>
+{
+    const float a;
+
+    saxpy_functor(float _a) : a(_a) {}
+
+	__host__ __device__
+        float operator()(const float& x, const float& y) const { 
+            return a * x + y;
+        }
+};
 
 int main(int argc, char *argv[])
 {
@@ -20,14 +29,17 @@ int main(int argc, char *argv[])
   thrust::device_vector<float> dev_a = host_a;
   thrust::device_vector<float> dev_b = host_b;
 
-  thrust::transform(dev_a.begin(), dev_a.end(),  // input range #1
-		    dev_b.begin(),           // input range #2
-		    dev_a.begin(),           // output range
-		    scale * _1 + _2);        // placeholder expression
+  thrust::transform(dev_a.begin(), dev_a.end(), // input range #1
+		    dev_b.begin(),              // input range #2
+		    dev_a.begin(),              // output range
+		    saxpy_functor(scale));      // placeholder expression
 
+  host_a = dev_a;
+  
   float max_error = 0.0f;
   for (const float& item : host_a )
     max_error = std::max(max_error, std::abs(item-44.0f));
 
+  std::cout << "Max error: " << max_error << std::endl;
   return 0;
 }
