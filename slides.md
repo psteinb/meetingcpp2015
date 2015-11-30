@@ -54,7 +54,7 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 
 [columns,class="row vertical-align"]
 
-[column,class="col-xs-10"]
+[column,class="col-xs-8"]
 
 <center>
 ![](img/800px-MPI-CBG_building_outside_4pl.jpg)  
@@ -63,10 +63,11 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 
 [/column]
 
-[column,class="col-xs-2"]
+[column,class="col-xs-4"]
 
+* Dresden, Saxony
 * 450 staff
-* founded 2001 in Dresden
+* founded 2001
 * cell biology
 * genomics
 * systems biology
@@ -79,8 +80,7 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 
 <center>
 
-
-<video width="1000" poster="video/Celegans_lateral_one_view_versus_deconvolved.png" controls loop>
+<video width="1400" poster="video/Celegans_lateral_one_view_versus_deconvolved.png" controls loop>
 <source src="video/Celegans_lateral_one_view_versus_deconvolved.webm" type='video/webm; codecs="vp8.0, vorbis"'>
 <source src="video/Celegans_lateral_one_view_versus_deconvolved.mp4" type='video/mp4'>
 <p>Movie does not work! Sorry!</p>
@@ -114,8 +114,13 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 
 
 <center>
-![](data/201x_acc_fraction_1200x.png)  
+
+<object type="image/svg+xml" data="data/201x_acc_fraction.svg"
+width="1300" border="0" style="background-color: #FFFFFF;">
+</object>  
+
 Data obtained from [Top500.org](www.Top500.org)
+
 </center>
 
 ## Vendor Options
@@ -309,11 +314,11 @@ Note: Will use Nvidia Kepler as example without loss of generality for GPGPU.
 
 ## A more in-depth look
 
-<div style="text-align: center;margin-top: 4%;">
+<center>
 <object type="image/svg+xml" data="figures/K40.svg"
 width="1400" border="0" style="background-color: #FFFFFF;">
 </object>
-</div>
+</center>
 
 <center>
 Nvidia K40: 15 Streaming Multiprocessors (SMX), 12 GB of GDDR5 DRAM

@@ -69,7 +69,7 @@ my_theme <- my_theme + theme(line = element_line(colour = "black", size = 0.5, l
                              ## legend.key.size =    unit(1.2, "lines"),
                              legend.key.height =  NULL,
                              legend.key.width =   NULL,
-                             legend.text =        element_text(size = rel(0.8), colour = "white"),
+                             legend.text =        element_text(size = 24, colour = "white"),
                              legend.text.align =  NULL,
                              legend.title =       element_text(size = rel(0.8), face = "bold", hjust = 0, colour = "black"),
                              legend.title.align = NULL,
@@ -93,8 +93,7 @@ my_theme <- my_theme + theme(line = element_line(colour = "black", size = 0.5, l
                              
                              complete = TRUE)
 
-my_theme <- my_theme + theme(legend.text = element_text( size = 20),
-                             legend.position="top",
+my_theme <- my_theme + theme(legend.position="top",
                              legend.box.just="left",
                              legend.key = element_rect(colour = 'white', fill = 'black', size = 0., linetype='dashed'),
                              legend.background =  element_rect(colour = "white",fill="black"))
