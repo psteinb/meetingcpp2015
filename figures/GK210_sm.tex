@@ -32,7 +32,7 @@
 
   \node (FUs) [very thick,draw,rectangle, minimum width={width("Functional")+.5cm}, minimum height=6cm,font=\huge,align=center] at(0,0) {Functional\\Units\\(192 CUDA Cores)};
   
-  \node (Regs) [very thick,draw,rectangle, minimum width={width("Register")+.5cm}, minimum height=6cm,font=\huge,align=center] at($(FUs.east)+(3,0)$) {Register\\File\\($\unit[256]{kB}$)};
+  \node (Regs) [very thick,draw,rectangle, minimum width={width("Register")+.5cm}, minimum height=6cm,font=\huge,align=center] at($(FUs.east)+(3,0)$) {Register\\File\\($\unit[64]{kB}$)};
 
   \node [double arrow, draw, line width=1pt,font=\huge,inner xsep=.5cm,inner ysep=.3cm] at($(FUs.east)!.5!(Regs.west)$) {};
 

@@ -934,7 +934,6 @@ struct saxpy_functor :
 public thrust::binary_function<float,float,float>
 {
     const float a;
-
     saxpy_functor(float _a) : a(_a) {}
 
 	__host__ __device__
@@ -957,12 +956,10 @@ int main(//...){//..
   thrust::device_vector<float> dev_a = host_a;
   thrust::device_vector<float> dev_b = host_b;
 
-  thrust::transform(dev_a.begin(),
-					dev_a.end(), 
+  thrust::transform(dev_a.begin(),dev_a.end(), 
 					dev_b.begin(),
 				    dev_a.begin(),
-				    saxpy_functor(scale));
-	
+				    saxpy_functor(scale));	
 }
 ~~~
 
@@ -1025,7 +1022,7 @@ int main(//...){//..
 [column,class="col-xs-4"]
 
 <center>
-meant for   
+meant for APU  
 ![](img/apu_comic.gif)  
 **A**ll-purpose G**PU**s
 </center>
@@ -1047,15 +1044,14 @@ meant for
 ## HCC Vector Sum (C++AMP)
 
 ``` {.cpp}
-void amp_sum(std::vector<float>& _va,
-	     const std::vector<float>& _vb,
-	     float _scale){
+void amp_sum(
+		vector<float>& _va,const vector<float>& _vb,
+	    float _scale){
 		 
   concurrency::extent<1> ext_a(_va.size()),
 						 ext_b(_vb.size());
 
-  concurrency::array_view<float, 1> 	  view_a(ext_a,
-												 _va); 
+  concurrency::array_view<float, 1> view_a(ext_a,_va); 
   concurrency::array_view<const float, 1> view_b(ext_b,
 												 _vb); 
   
@@ -1410,7 +1406,7 @@ taken from concurrency TS
 
 [column,class="col-xs-8 text-left"]
 
-*Jeff Oegema, Ian Henry, ...*
+*Robert Haase, Ian Henry, Benoit Lombardot, Jeff Oegema*
 
 [/column]
 
@@ -1427,7 +1423,7 @@ taken from concurrency TS
 
 [column,class="col-xs-8 text-left"]
 
-*Michael Bussmann, Guido Juckeland, ...*
+*Guido Juckeland, Erik Zenker, René Widera*
 
 [/column]
 
