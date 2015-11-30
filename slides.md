@@ -79,15 +79,16 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 
 <center>
 
-<a href="http://www.nature.com/nmeth/journal/v11/n6/full/nmeth.2929.html">
-<video width="1200" poster="video/Celegans_lateral_one_view_versus_deconvolved.png" controls>
+
+<video width="1000" poster="video/Celegans_lateral_one_view_versus_deconvolved.png" controls loop>
 <source src="video/Celegans_lateral_one_view_versus_deconvolved.webm" type='video/webm; codecs="vp8.0, vorbis"'>
 <source src="video/Celegans_lateral_one_view_versus_deconvolved.mp4" type='video/mp4'>
 <p>Movie does not work! Sorry!</p>
 </video>
-</a>
 
-*Accelerating scientific software (multi-GB dataset, a lot of FFTs)*
+
+*Accelerating [scientific algorithms](http://www.nature.com/nmeth/journal/v11/n6/full/nmeth.2929.html) on [GPUs](https://github.com/psteinb/gtc2015.git)
+(multi-GB dataset, a lot of FFTs)*
 
 </center>
 
@@ -238,11 +239,11 @@ Intel Xeon Phi 5110P
 # Architecture { data-background="img/nvidia_kepler_die_shot.jpg"} 
 
 
-## { data-background="img/1200x_islay_overbright.png" data-background-size="1200px" }
+## { data-background="img/islay_1024px.png" data-background-size="800px" }
 
 
 
-## { data-background="img/1200x_islay_overbright_annotated.png" data-background-size="1200px" }
+## { data-background="img/islay_annotated_1024px.png" data-background-size="800px" }
 
 
 ## Food Hunt
@@ -480,27 +481,6 @@ width="1400" border="0" >
 ## Note: Memory Access
 
 <center>
-**Good: Coalesced Memory Access**
-
-[columns,class="row vertical-align"]
-
-[column,class="col-xs-12"]
-
-<object type="image/svg+xml" data="figures/coalesced_mem_access.svg"
-width="1000" border="0" >
-</object>
-
-
-[/column]
-
-[/columns]
-
-</center>
-
-
-. . .
-
-<center>
 
 **Bad: Non-Coalesced Memory Access**
 
@@ -509,7 +489,7 @@ width="1000" border="0" >
 [column,class="col-xs-12"]
 
 <object type="image/svg+xml" data="figures/non_coalesced_mem_access.svg"
-width="1000" border="0" >
+width="1200" border="0" >
 </object>
 
 * every thread accesses different cache line at random
@@ -522,12 +502,40 @@ width="1000" border="0" >
 </center>
 
 
+. . .
+
+
+
+<center>
+**Good: Coalesced Memory Access**
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-12"]
+
+
+<object type="image/svg+xml" data="figures/coalesced_mem_access.svg"
+width="1200" border="0" >
+</object>
+
+
+
+[/column]
+
+[/columns]
+
+</center>
+
+
+
+
+
 ## Summary Architecture
 
 <center>
 * **GPUs are complicated beasts**
 
-* **massive parallel compute power** 
+* **massive parallel compute power per Watt** 
 
 * **massive ways to kill performance**
 </center>
@@ -685,10 +693,10 @@ width="1000" border="0" >
 
 * source code split into host and device part
 
-		* host  : C++11 and STL supported
-
-		* device: subset of C++11
-		  (no exceptions, no iostream, no inheritance support, no STL)
+    * host  : C++11 and STL supported
+    
+    * device: tiny subset of C++11  
+	(no exceptions, no iostream, no inheritance support, no STL)
 
 </center>
 
@@ -720,61 +728,55 @@ width="1000" border="0" >
 </center>
 
 
-## CUDA Code
+## CUDA Code: Mem Init
 
 ~~~~ {.cpp}
-int main(void)
-{
-  std::size_t vsize = (1<<20);
-
-  //..
-
+int main(/*..*/){//..
   std::vector<float> host_a(vsize,1.f);
   std::vector<float> host_b(vsize,2.f);
-  const float host_d = 42.f;
 
-  //gpu relevant code
   float * device_a=nullptr, *device_b=nullptr;
-
-  const std::size_t vsize_byte=vsize*sizeof(float);
-
-  //allocate memory
   cudaMalloc(&device_a, vsize_byte); 
   cudaMalloc(&device_b, vsize_byte);
 
-  //transfer memory
   cudaMemcpy(device_a, &host_a[0], vsize_byte,
              cudaMemcpyHostToDevice);
   cudaMemcpy(device_b, &host_b[0], vsize_byte,
 			 cudaMemcpyHostToDevice);
+~~~~
+  
+## CUDA Code: Compute
 
-  //dispatch to device
-  vector_sum<<<(vsize+255)/256, 256>>>(vsize,
-					     host_d,
-					     device_a,
-					     device_b);
+~~~~ {.cpp}
+  //above main
+__global__ void vector_sum(std::size_t _size,
+			   float _scale, float* _a, float* _b){
+  std::size_t index = blockIdx.x*blockDim.x + threadIdx.x;
+  if (index < _size)
+    _a[index] = _scale*_a[index] + _b[index];
+}
 
+//in main: dispatch to device
+vector_sum<<<(vsize+255)/256, 256>>>(vsize,
+									 host_d,
+									 device_a,
+									 device_b);
+~~~~~
+
+## CUDA Code: Mem TX + Clean-up
+
+~~~~ {.cpp}
   //transfer memory back
   cudaMemcpy(&host_a[0], device_a, vsize_byte,
              cudaMemcpyDeviceToHost);
 
-  //...
-
+  //clean-up
   cudaFree(device_a);
   cudaFree(device_b);
   return 0;
 }
 
-//above main
-__global__ void vector_sum(std::size_t _size,
-			   float _scale,
-			   float* _a,
-			   float* _b){
-  std::size_t index = blockIdx.x*blockDim.x + threadIdx.x;
-  if (index < _size)
-    _a[index] = _scale*_a[index] + _b[index];
-}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~
 
 ## CUDA Wrap-up
 
@@ -815,7 +817,7 @@ __global__ void vector_sum(std::size_t _size,
 
 * compiler is sometimes hard to come by (using boost, OpenMP interoperability)
 
-* ```__keyword__``` disrupt good design (maintainability)
+* ```__keyword__``` disrupt design (redundancy, maintainability)
 
 </center>
 
@@ -858,9 +860,9 @@ _No Logo due to Apple's Copyright_
 
 * source code split into host and device part
 
-		* host  : C/C++ based API (lower level than CUDA)
+    * host  : C/C++ based API (lower level than CUDA)
 
-		* device: C99 derived language
+    * device: C99 derived language
 
 
 </center>
@@ -920,7 +922,7 @@ _parallel algorithms library which resembles the C++ Standard Template Library (
 </center>
 
 
-## thrust Vector ADD
+## thrust Code: Functor 
 
 ~~~ {.cpp}
 struct saxpy_functor :
@@ -937,12 +939,15 @@ public thrust::binary_function<float,float,float>
             return a * x + y;
         }
 };
+~~~~~
 
-int main(//...){
+## thrust Code: GPU dispatch
+
+~~~ {.cpp}
+int main(//...){//..
 
   thrust::host_vector<float> host_a(N,1.f);
   thrust::host_vector<float> host_b(N,2.f);
-  const float scale = 42.f;
 
   thrust::device_vector<float> dev_a = host_a;
   thrust::device_vector<float> dev_b = host_b;
@@ -952,14 +957,7 @@ int main(//...){
 					dev_b.begin(),
 				    dev_a.begin(),
 				    saxpy_functor(scale));
-
-  //thrust::transform(thrust::system::cuda::par,
-  //			dev_a.begin(), dev_a.end(),
-  //			dev_b.begin(),
-  //			dev_a.begin(),
-  //			saxpy_functor(scale)
-  //			);        
-  	
+	
 }
 ~~~
 
@@ -1269,13 +1267,31 @@ from [SIGGRAPH Asia 11/2015](https://www.khronos.org/assets/uploads/developers/l
 
 ## based on CUDA
 
-<center>
-![](img/gtc2015_mark_harris_beyond_cuda7.png)  
-from [GTC 2015](http://on-demand.gputechconf.com/gtc/2015/presentation/S5820-Mark-Harris.pdf)  
+~~~~ {.cpp}
+vector_sum<<<(vsize+255)/256, 256>>>(/*..*/);
 
-**Take away**: also fp16 support, but roadmap unclear
+launch(vector_sum, /*..*/);
+~~~~
+<center>
+from GTC2015
 </center>
 
+. . .
+
+~~~~ {.cpp}
+auto f1 = bulk_async(par(n), [=](parallel_agent &self)
+						    {
+							  int i = self.index();
+							  z[i] = a * x[i] + y[i];
+							});
+ 
+auto f2 = bulk_then(f1, par(n), other_work);
+auto f3 = bulk_then(f1, par(n), more_work);
+when_all(f2, f3).wait();
+~~~~
+<center>
+from SC15
+</center>
 
 ## C++17
 
@@ -1310,9 +1326,11 @@ transform(	std::experimental::parallel::par,
 			std::begin(a)
 			[&](float& a, const float& b) {
 				a = scale*a + b;
-			}
-		 );
+			});
 ~~~
+<center>
+**Nvidia+AMD: plan support to support this with specific `parallel::policy`**
+</center>
 
 ## C++17 GPU excitement
 
@@ -1343,18 +1361,29 @@ taken from concurrency TS
 
 # Summary
 
-## GPUs today convert workstations to compute clusters, and clusters to supercomputers!
+## Why you came ...
+
+<center>
+**C++ on GPUs done right?**  
+
+
+* in production: almost entirely dominated by C99
+
+* on the horizon: performant, flexible and maintainable APIs slowly emerging
+
+</center>
+
+&nbsp;
 
 . . .
 
 &nbsp;
+**GPUs today convert workstations to compute clusters, and clusters to supercomputers!**
+&nbsp;
 <center>
 * GPUs architecture is complex: obtaining max. performance challenging
 
-* GPU programming today has clear C legacy of early days
-
-* performant, flexible and maintainable APIs slowly emerging
-
+* accelerators are a must on the road to exascale
 </center>
 
 
