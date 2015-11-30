@@ -50,6 +50,46 @@ If not stated otherwise, the slides and all it's code is licensed under
 __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://creativecommons.org/licenses/by/4.0/))
 </center>
 
+## Who am I?
+
+[columns,class="row vertical-align"]
+
+[column,class="col-xs-10"]
+
+<center>
+![](img/800px-MPI-CBG_building_outside_4pl.jpg)  
+*Scientific Software Engineer* at Max Planck Institute of Molecular Cell Biology and Genetics
+</center>
+
+[/column]
+
+[column,class="col-xs-2"]
+
+* 450 staff
+* founded 2001 in Dresden
+* cell biology
+* genomics
+* systems biology
+
+[/column]
+
+[/columns]
+
+## What do I do?
+
+<center>
+
+<a href="http://www.nature.com/nmeth/journal/v11/n6/full/nmeth.2929.html">
+<video width="1200" poster="video/Celegans_lateral_one_view_versus_deconvolved.png" controls>
+<source src="video/Celegans_lateral_one_view_versus_deconvolved.webm" type='video/webm; codecs="vp8.0, vorbis"'>
+<source src="video/Celegans_lateral_one_view_versus_deconvolved.mp4" type='video/mp4'>
+<p>Movie does not work! Sorry!</p>
+</video>
+</a>
+
+*Accelerating scientific software (multi-GB dataset, a lot of FFTs)*
+
+</center>
 
 ## Outline
 

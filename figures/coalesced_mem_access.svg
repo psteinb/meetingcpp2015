@@ -42,14 +42,9 @@
 <path style="stroke:none;" d="M 4.109375 -1.015625 C 4.109375 -1.640625 3.625 -2.03125 3.09375 -2.03125 C 2.609375 -2.03125 2.078125 -1.640625 2.078125 -1.015625 C 2.078125 -0.390625 2.578125 0 3.09375 0 C 3.59375 0 4.109375 -0.390625 4.109375 -1.015625 Z M 4.109375 -1.015625 "/>
 </symbol>
 </g>
-<clipPath id="clip1">
-  <path d="M 0 0 L 527.4375 0 L 527.4375 96.792969 L 0 96.792969 Z M 0 0 "/>
-</clipPath>
 </defs>
 <g id="surface1">
-<g clip-path="url(#clip1)" clip-rule="nonzero">
 <path style=" stroke:none;fill-rule:nonzero;fill:rgb(0%,0%,0%);fill-opacity:1;" d="M 0 96.792969 L 0 0 L 527.441406 0 L 527.441406 96.792969 Z M 0 96.792969 "/>
-</g>
 <path style="fill:none;stroke-width:1.19553;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(100%,100%,100%);stroke-opacity:1;stroke-miterlimit:10;" d="M -14.171562 -14.171656 L 14.172188 -14.171656 L 14.172188 14.172094 L -14.171562 14.172094 Z M -14.171562 -14.171656 " transform="matrix(1,0,0,-1,128.57,74.301)"/>
 <g style="fill:rgb(100%,100%,100%);fill-opacity:1;">
   <use xlink:href="#glyph0-1" x="121.547" y="78.924"/>
