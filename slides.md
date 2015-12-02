@@ -1154,7 +1154,7 @@ void vector_sum(int size, float scale,
 heterogenous accelerator support since version 4.0 (available in [gcc 5.0+](https://gcc.gnu.org/wiki/Offloading))
 </center>
 
-## Pragma based continued
+## Pragmas continued
 
 [columns,class="row vertical-align"]
 
