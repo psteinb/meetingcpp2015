@@ -45,9 +45,9 @@ Feel free to reply, discuss, inform, correct, ...
 &nbsp;
 
 <center>
-If not stated otherwise, the slides and all it's code is licensed under
+If not stated otherwise, the slides and all it's code are licensed under
 
-__Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://creativecommons.org/licenses/by/4.0/))
+**[Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/)**
 </center>
 
 ## Who am I?
@@ -58,7 +58,8 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 
 <center>
 ![](img/800px-MPI-CBG_building_outside_4pl.jpg)  
-*Scientific Software Engineer* at Max Planck Institute of Molecular Cell Biology and Genetics
+*Scientific Software Engineer* at Max Planck Institute of Molecular Cell Biology and Genetics  
+(employed by [Scionics Computer Innovations GmbH](www.scionics.de))
 </center>
 
 [/column]
@@ -108,10 +109,9 @@ __Creative Commons Attribution 4.0 International License__ ([CC-BY 4.0](http://c
 
 </div>
 
-# Massively Parallel Programming
+# Massively Parallel Programming { data-background="img/Titan_render.png" data-background-size="800px" style="margin-top: 20%"} 
 
-## Why all the fuzz??
-
+## Yet Another Hype?
 
 <center>
 
@@ -309,7 +309,7 @@ GPU
 [/columns]
 
 <center>
-Note: Will use Nvidia Kepler as example without loss of generality for GPGPU.
+Note: Will use Nvidia Kepler as GPGPU example.
 </center>
 
 ## A more in-depth look
@@ -383,7 +383,7 @@ height="200" border="0">
 
 
 <object type="image/svg+xml" data="figures/thread_block.svg"
-height="200" border="0" >
+height="200" border="0" class="img-rounded">
 </object>
 
 
@@ -414,7 +414,7 @@ height="200" border="0" >
 
 
 <object type="image/svg+xml" data="figures/grid_block.svg"
-height="200" border="0" >
+height="200" border="0" class="img-rounded">
 </object>
 
 
@@ -431,7 +431,8 @@ height="200" border="0" >
 
 ## Hiding Memory Latency
 
-* grid blocks dispatched to SMX based warp schedulers  
+* grid blocks spanned to SMX 
+* warp schedulers dispatch warps from blocks  
 
 . . .
 
@@ -443,7 +444,7 @@ height="200" border="0" >
 
 <center>
 <object type="image/svg+xml" data="figures/high_throughput_smx.svg"
-width="1400" border="0" >
+width="1400" border="0" class="img-rounded">
 </object>
 </center>
 
@@ -463,7 +464,9 @@ width="1400" border="0" >
 
 	* fp32 add/mul/fma: 1 tick per warp
 
-## Note: Data Locality
+# Architecture Takeaways
+
+## Data Locality
 
 <center>
 [columns,class="row vertical-align"]
@@ -471,7 +474,7 @@ width="1400" border="0" >
 [column,class="col-xs-12"]
 
 <object type="image/svg+xml" data="figures/gpu_cpu_dichotomy.svg"
-width="1400" border="0" >
+width="1400" border="0" class="img-rounded">
 </object>
 
 
@@ -483,7 +486,7 @@ width="1400" border="0" >
 
 </center>
 
-## Note: Memory Access
+## Memory Access
 
 <center>
 
@@ -494,7 +497,7 @@ width="1400" border="0" >
 [column,class="col-xs-12"]
 
 <object type="image/svg+xml" data="figures/non_coalesced_mem_access.svg"
-width="1200" border="0" >
+width="1200" border="0" class="img-rounded">
 </object>
 
 * every thread accesses different cache line at random
@@ -520,7 +523,7 @@ width="1200" border="0" >
 
 
 <object type="image/svg+xml" data="figures/coalesced_mem_access.svg"
-width="1200" border="0" >
+width="1200" border="0" class="img-rounded">
 </object>
 
 
@@ -562,16 +565,12 @@ width="1200" border="0" >
 
 [column,class="col-xs-6"]
 
+<div style="font-size: 1.5em">
 <center>
-**Never ever program GPGPUs!**  
-</center>
-
-. . .
-
-
-* 32 threads is the minimum you get
+* 32 threads is the minimum
 
 * good tools are rare and almost never portable
+<center>
 
 . . .
 
@@ -579,6 +578,7 @@ width="1200" border="0" >
 **Use a Library!**
 
 </center>
+</div>
 
 [/column]
 
@@ -648,7 +648,8 @@ width="1200" border="0" >
 [column,class="col-xs-6"]
 
 <center>
-* Linear Algrebra:  
+* Multi-Purpose:  
+[Alpaka](https://github.com/ComputationalRadiationPhysics/alpaka), [ArrayFire](https://github.com/arrayfire/arrayfire),   
 [VexCL](https://github.com/ddemidov/vexcl), [ViennaCL](http://viennacl.sourceforge.net/), ...
 
 * Image/Video Processing:  
@@ -665,6 +666,21 @@ width="1200" border="0" >
 [/column]
 
 [/columns]
+
+
+## Baseline Example
+
+<center>
+```
+void vector_sum(std::vector<float>& a,
+				float scale, const std::vector<float>& b) {
+	for (int i=0; i<a.size(); i++) 
+		a[i] = a[i] * scale + b[i];
+}
+```
+**Vector Sum**
+</center>
+
 
 ## CUDA Overview
 
@@ -692,7 +708,7 @@ width="1200" border="0" >
 <center>
 * freeware tool suite, gpu library package and low/high level API(s)
 
-* CUDA platform supports C, C++ and Fortran
+* CUDA platform supports C and C++ with proprietary compiler 
 
 * binaries run on Nvidia hardware only
 
@@ -701,29 +717,16 @@ width="1200" border="0" >
     * host  : C++11 and STL supported
     
     * device: tiny subset of C++11  
-	(no exceptions, no iostream, no inheritance support, no STL)
+	(no exceptions, no iostream, no virtual inheritance, no STL)
 
 </center>
 
 
-
-## CUDA Vector Sum
+## [Simple 5 Steps](http://devblogs.nvidia.com/parallelforall/easy-introduction-cuda-c-and-c/)
 
 &nbsp;
 
-<center>
-```a[i] = b[i] + d*a[i]```
-</center>
-
-. . . 
-
-
-&nbsp;
-
-<center>
-**[Simple 5 Steps](http://devblogs.nvidia.com/parallelforall/easy-introduction-cuda-c-and-c/)**  
-</center>
-
+<div style="font-size: 1.5em">
 <center>
 1. Declare and allocate host and device memory.
 1. Initialize host data.
@@ -731,7 +734,7 @@ width="1200" border="0" >
 1. Execute one or more kernels (vector sum).
 1. Transfer results from the device to the host.  
 </center>
-
+</div>
 
 ## CUDA Code: Mem Init
 
@@ -753,7 +756,7 @@ int main(/*..*/){//..
 ## CUDA Code: Compute
 
 ~~~~ {.cpp}
-  //above main
+//above main
 __global__ void vector_sum(std::size_t _size,
 			   float _scale, float* _a, float* _b){
   std::size_t index = blockIdx.x*blockDim.x + threadIdx.x;
@@ -867,7 +870,7 @@ _No Logo due to Apple's Copyright_
 
     * host  : C/C++ based API (lower level than CUDA)
 
-    * device: C99 derived language
+    * device: C11 derived language ([OpenCL 2.0](https://www.khronos.org/registry/cl/sdk/2.0/docs/OpenCL-2.0-refcard.pdf))
 
 
 </center>
@@ -996,7 +999,8 @@ int main(//...){//..
 
     * grid distpatch of kernel by thrust library (occupancy)
 
-* kernel optimisations with CUDA only ([CUB](https://nvlabs.github.io/cub/) library?)
+* kernel optimisations = CUDA  
+([CUB](https://nvlabs.github.io/cub/) library?)
 
 * C++11, C++17 ?
 </center>
@@ -1044,19 +1048,18 @@ meant for APU
 ## HCC Vector Sum (C++AMP)
 
 ``` {.cpp}
-void amp_sum(
-		vector<float>& _va,const vector<float>& _vb,
-	    float _scale){
+using namespace concurrency;
+void amp_sum(vector<float>& _va,
+			 const vector<float>& _vb,
+			 float _scale){
 		 
-  concurrency::extent<1> ext_a(_va.size()),
-						 ext_b(_vb.size());
+  extent<1> ext_a(_va.size()),ext_b(_vb.size());
 
-  concurrency::array_view<float, 1> view_a(ext_a,_va); 
-  concurrency::array_view<const float, 1> view_b(ext_b,
-												 _vb); 
+  array_view<float, 1> view_a(ext_a,_va); 
+  array_view<const float, 1> view_b(ext_b,_vb); 
   
   parallel_for_each(view_a.get_extent(),
-		    [=](concurrency::index<1> idx) restrict(amp)
+		    [=](index<1> idx) restrict(amp)
 		    {
 		      view_a[idx] = view_a[idx]*_scale
 			  + view_b[idx]  ;
@@ -1187,7 +1190,7 @@ void vector_sum(int size, float scale, float *a, float *b) {
 
 <center>
 (partially available in [gcc 5.0+](https://gcc.gnu.org/wiki/Offloading),  
-fully in [pgi](https://www.pgroup.com/resources/accel.htm) compiler)
+fully in [pgi](https://www.pgroup.com/resources/accel.htm) & [pathscale](http://www.pathscale.com/enzo) compiler)
 </center>
 
 ## Pragma Wrap-up
@@ -1204,6 +1207,8 @@ fully in [pgi](https://www.pgroup.com/resources/accel.htm) compiler)
 * dream: one-line injection and code is fast
 
 * strong industrial support (tooling)
+
+* perfect fit for upgrading legacy code or prototyping
 
 </center>
 
