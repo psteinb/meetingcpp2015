@@ -241,7 +241,7 @@ Intel Xeon Phi 5110P
 [/columns]
 
 <!-- http://www.theregister.co.uk/2012/05/18/inside_nvidia_kepler2_gk110_gpu_tesla/ -->
-# Architecture { data-background="img/nvidia_kepler_die_shot.jpg"} 
+# Architecture { data-background="img/nvidia_kepler_die_shot.jpg" } 
 
 
 ## { data-background="img/islay_1024px.png" data-background-size="800px" }
@@ -456,15 +456,34 @@ width="1400" border="0" class="img-rounded">
 &nbsp;
 
 
-* hide (memory) latency by interleaving active warps
+* hide (memory) latency by pipelining active warps
 
 * [Kepler](http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#multiprocessor-level):
 
 	* global memory access: 200-400 ticks per warp
 
-	* fp32 add/mul/fma: 1 tick per warp
+	* fp32 add/mul/fma: 32 per tick per warp
 
-# Architecture Takeaways
+#  { data-background="img/1024px-unmarked_holes.jpg" }
+
+## Compute > Memory Access
+
+<center>
+<object type="image/svg+xml" data="figures/high_throughput_smx.svg"
+width="1400" border="0" class="img-rounded">
+</object>
+
+&nbsp;
+
+* device kernels
+
+    * arithmetic complexity needs to be high 
+
+    * number of arithmetic operations > number of load/store operations
+
+</center>
+
+
 
 ## Data Locality
 
@@ -548,7 +567,9 @@ width="1200" border="0" class="img-rounded">
 * **massive ways to kill performance**
 </center>
 
-# What can you use today?
+<!-- https://commons.wikimedia.org/wiki/File:Colorful_Guitars,_Haight_Street,_San_Francisco.jpg -->
+
+# What can you use today? { data-background="img/1024px-San_Francisco_Haight_Str_Guitar_Shop.jpg" style="color: black; margin: 0;margin-top: -100px;" }
 
 ## A Word of Warning!
 
@@ -722,7 +743,7 @@ void vector_sum(std::vector<float>& a,
 </center>
 
 
-## [Simple 5 Steps](http://devblogs.nvidia.com/parallelforall/easy-introduction-cuda-c-and-c/)
+## [5 Simple Steps In CUDA](http://devblogs.nvidia.com/parallelforall/easy-introduction-cuda-c-and-c/)
 
 &nbsp;
 
@@ -833,6 +854,7 @@ vector_sum<<<(vsize+255)/256, 256>>>(vsize,
 
 [/columns]
 
+## CUDA is like ... { data-background="img/1024px-Taylor415_acoustic.jpg" }
 
 ## OpenCL
 
@@ -894,6 +916,12 @@ const char *kernelSource =                     "\n" \
 ~~~~
 <center>
 from [www.olcf.ornl.gov](https://www.olcf.ornl.gov/tutorials/opencl-vector-addition/)
+</center>
+
+## OpenCL is like ... 
+
+<center>
+![by [Kasra Ganjavi](https://en.wikipedia.org/wiki/File:Andy_McKee,_January_2008.jpg)](img/Andy_McKee_January_2008.jpg)
 </center>
 
 ## thrust
@@ -1009,6 +1037,11 @@ int main(//...){//..
 
 [/columns]
 
+## thrust is like ...
+
+<center>
+![by [axeplace.com](http://axepalace.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/d/v/dv020_jpg_jumbo_h70433.001_black_flat3.jpg)](img/baseguitar.jpg)
+</center>
 
 ## HCC
 
@@ -1018,7 +1051,7 @@ int main(//...){//..
 
 <center>
 **H**eterogenous **C**ompute **C**ompiler  
-([cppamp-driver-ng-35](https://bitbucket.org/multicoreware/cppamp-driver-ng-35/wiki/Home))
+([bitbucket.org/multicoreware/hcc](https://bitbucket.org/multicoreware/hcc/wiki/Home))
 </center>
 
 [/column]
@@ -1088,6 +1121,10 @@ void amp_sum(vector<float>& _va,
 
 * homogenous C++ source code
 
+* function continuations supported
+```
+future1.then(future2)//..
+```
 </center>
 
 [/column]
@@ -1098,7 +1135,7 @@ void amp_sum(vector<float>& _va,
 
 <center>
 
-* young project, API still fluid (`concurrency::` vs. `hc::`)
+* young project, API still fluid (`concurrency::` => `hc::`)
 
 * no tooling yet (debugger, profiler, ...)
 
@@ -1113,6 +1150,14 @@ void amp_sum(vector<float>& _va,
 [/column]
 
 [/columns]
+
+## HC is like ...
+
+<center>
+![](img/Elektrofryingpan_landscape.jpg)  
+1932, by [Museum of Making Music at English Wikipedia](https://commons.wikimedia.org/wiki/File:Elektrofryingpan.jpg)
+
+</center>
 
 
 ## Pragma based approaches
@@ -1234,8 +1279,18 @@ fully in [pgi](https://www.pgroup.com/resources/accel.htm) & [pathscale](http://
 
 [/columns]
 
+## Pragmas are like ...
 
-# What can you use tomorrow
+
+<center>
+![](img/1024px-Ukulele-electro-acoustic.jpg)  
+by [Alno](https://commons.wikimedia.org/wiki/File:Ukulele-electro-acoustic.JPG)
+
+</center>
+
+
+
+# [What can you use tomorrow](http://bloggerspath.com/5-cool-unusual-gadgets-to-observe-the-future/) { data-background="img/touchscreen-guitar.jpg" }
 
 ## Boost.Compute
 
@@ -1262,7 +1317,7 @@ fully in [pgi](https://www.pgroup.com/resources/accel.htm) & [pathscale](http://
         device_a.begin(),compute::add<float>(),queue);
 ~~~~
 
-## based on OpenCL
+## OpenCL tomorrow
 
 <center>
 ![](img/khronos_road_map.png)  
@@ -1271,7 +1326,7 @@ from [SIGGRAPH Asia 11/2015](https://www.khronos.org/assets/uploads/developers/l
 **Take away**: SPIR-V promising, SYCL very similar to boost.compute
 </center>
 
-## based on CUDA
+## CUDA tomorrow
 
 ~~~~ {.cpp}
 vector_sum<<<(vsize+255)/256, 256>>>(/*..*/);
@@ -1279,7 +1334,7 @@ vector_sum<<<(vsize+255)/256, 256>>>(/*..*/);
 launch(vector_sum, /*..*/);
 ~~~~
 <center>
-from GTC2015
+from GTC2015 (03/2015)
 </center>
 
 . . .
@@ -1296,7 +1351,7 @@ auto f3 = bulk_then(f1, par(n), more_work);
 when_all(f2, f3).wait();
 ~~~~
 <center>
-from SC15
+from SC15 (11/2015)
 </center>
 
 ## C++17
@@ -1323,7 +1378,6 @@ Published already:
 
 [/columns]
 
-&nbsp;
 
 ~~~ {.cpp}
 transform(	std::experimental::parallel::par,
@@ -1335,10 +1389,17 @@ transform(	std::experimental::parallel::par,
 			});
 ~~~
 <center>
-**Nvidia+AMD: plan support to support this with specific `parallel::policy`**
+**vendors plan to support this with**
+
+<div style="width: 70%;align: center;">
+```
+std::parallel::cuda, std::parallel::opencl
+```
+</div>
+
 </center>
 
-## C++17 GPU excitement
+## My C++17 GPU excitement
 
 . . .
 
@@ -1361,35 +1422,37 @@ taken from concurrency TS
 
 * future: use `(a)wait/then` and friends to express data dependencies
 
-* support of compiler vendors needed (Nvidia, HSA, ...)
+* support by compiler vendors needed 
 </center>
 
 
 # Summary
 
-## Why you came ...
+## C++ on GPUs done right? 
 
 <center>
-**C++ on GPUs done right?**  
+
+* in production: almost dominated by C99
+
+* on the horizon: performant, flexible and maintainable **C++ APIs** emerging
 
 
-* in production: almost entirely dominated by C99
-
-* on the horizon: performant, flexible and maintainable APIs slowly emerging
-
+![](img/800px-San_Francisco_Haight_Str_Guitar_Shop.jpg)
 </center>
 
+
+## GPUs are there to stay
+
 &nbsp;
 
-. . .
-
-&nbsp;
 **GPUs today convert workstations to compute clusters, and clusters to supercomputers!**
+
 &nbsp;
+
 <center>
 * GPUs architecture is complex: obtaining max. performance challenging
 
-* accelerators are a must on the road to exascale
+* accelerators are a must on the road to exascale/performance
 </center>
 
 
@@ -1403,7 +1466,7 @@ taken from concurrency TS
 [column,class="col-xs-4"]
 
 
-[MPI CBG](http://www.mpi-cbg.de)
+[MPI CBG](http://www.mpi-cbg.de) / [Scionics Computer Innovations GmbH](www.scionics.de)
 
 
 [/column]
@@ -1428,7 +1491,7 @@ taken from concurrency TS
 
 [column,class="col-xs-8 text-left"]
 
-*Guido Juckeland, Erik Zenker, René Widera*
+*Guido Juckeland, Thomas Karnagel, René Widera, Erik Zenker*
 
 [/column]
 
@@ -1477,6 +1540,14 @@ taken from concurrency TS
 ![](img/Sleeping_students.jpg)
 </center>
 
+## {style="font-size: 1.5em"}
+
+
+<center>
+**For Questions, Comments, Complaints, Compliments, ... **
+
+**[github.com/psteinb/meetingcpp2015](https://github.com/psteinb/meetingcpp2015)**
+</center>
 
 # Backup
 

@@ -27,9 +27,14 @@
 <path style="stroke:none;" d="M 5.65625 -1.78125 C 5.65625 -2.796875 4.828125 -3.5625 3.859375 -3.5625 C 2.90625 -3.5625 2.078125 -2.796875 2.078125 -1.78125 C 2.078125 -0.765625 2.90625 0 3.859375 0 C 4.828125 0 5.65625 -0.765625 5.65625 -1.78125 Z M 5.65625 -1.78125 "/>
 </symbol>
 </g>
+<clipPath id="clip1">
+  <path d="M 0 0 L 474.605469 0 L 474.605469 96.007812 L 0 96.007812 Z M 0 0 "/>
+</clipPath>
 </defs>
 <g id="surface1">
+<g clip-path="url(#clip1)" clip-rule="nonzero">
 <path style=" stroke:none;fill-rule:nonzero;fill:rgb(0%,0%,0%);fill-opacity:1;" d="M 0 96.007812 L 0 0 L 474.609375 0 L 474.609375 96.007812 Z M 0 96.007812 "/>
+</g>
 <path style="fill-rule:nonzero;fill:rgb(59.999084%,59.999084%,19.999695%);fill-opacity:1;stroke-width:1.19553;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(100%,100%,100%);stroke-opacity:1;stroke-miterlimit:10;" d="M 0.597719 0.00090625 L 43.11725 0.00090625 L 43.11725 28.348562 L 0.597719 28.348562 Z M 0.597719 0.00090625 " transform="matrix(1,0,0,-1,4.289,91.122)"/>
 <g style="fill:rgb(100%,100%,100%);fill-opacity:1;">
   <use xlink:href="#glyph0-1" x="12.836" y="82.459"/>
