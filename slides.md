@@ -556,7 +556,7 @@ width="1200" border="0" class="img-rounded">
 <center>
 * **GPUs are complicated beasts**
 
-* **massive parallel compute power per Watt** 
+* **massive parallel compute power** (per Watt) 
 
 * **massive ways to kill performance**
 </center>
@@ -1076,6 +1076,7 @@ meant for APU
 
 ``` {.cpp}
 using namespace concurrency;
+
 void amp_sum(vector<float>& _va,
 			 const vector<float>& _vb,
 			 float _scale){
@@ -1084,18 +1085,21 @@ void amp_sum(vector<float>& _va,
 
   array_view<float, 1> view_a(ext_a,_va); 
   array_view<const float, 1> view_b(ext_b,_vb); 
-  
+```
+
+## HCC continued
+
+~~~~ {.cpp}
   parallel_for_each(view_a.get_extent(),
 		    [=](index<1> idx) restrict(amp)
 		    {
-		      view_a[idx] = view_a[idx]*_scale
-			  + view_b[idx]  ;
+		      view_a[idx] = view_a[idx]*_scale + view_b[idx];
 		    }
 		    );
 
   view_a.synchronize();
 }
-```
+~~~~
 
 ## HCC Wrap-up
 
@@ -1190,7 +1194,7 @@ void vector_sum(int size, float scale,
 }
 ~~~~
 <center>
-heterogenous accelerator support since version 4.0 (available in [gcc 5.0+](https://gcc.gnu.org/wiki/Offloading))
+accelerator target since version 4.0 ([gcc 5.0+](https://gcc.gnu.org/wiki/Offloading), [icc 16+](https://software.intel.com/en-us/intel-parallel-studio-xe), [ENZO2016](http://www.pathscale.com/enzo))
 </center>
 
 ## Pragmas continued
@@ -1229,7 +1233,7 @@ void vector_sum(int size, float scale, float *a, float *b) {
 
 <center>
 (partially available in [gcc 5.0+](https://gcc.gnu.org/wiki/Offloading),  
-fully in [pgi](https://www.pgroup.com/resources/accel.htm) & [pathscale](http://www.pathscale.com/enzo) compiler)
+fully in [pgi](https://www.pgroup.com/resources/accel.htm) & [ENZO2016](http://www.pathscale.com/enzo) compiler)
 </center>
 
 ## Pragma Wrap-up
@@ -1247,7 +1251,7 @@ fully in [pgi](https://www.pgroup.com/resources/accel.htm) & [pathscale](http://
 
 * strong industrial support (tooling)
 
-* perfect fit for upgrading legacy code or prototyping
+* GPU: perfect fit for upgrading legacy code or prototyping
 
 </center>
 
@@ -1259,13 +1263,13 @@ fully in [pgi](https://www.pgroup.com/resources/accel.htm) & [pathscale](http://
 
 <center>
 
-* OpenMP works because of shared memory parallelism on CPU
+* OpenMP works well on shared memory CPUs
 
-* GPUs have different architecture than CPUs
+* (discrete) GPUs have different architecture than CPUs
 
 * language in a language ??
 
-* OpenACC, OpenMP dichotomy (will users loose?)
+* OpenACC, OpenMP dichotomy (will users/applications loose?)
 
 </center>
 
@@ -1286,7 +1290,7 @@ by [Alno](https://commons.wikimedia.org/wiki/File:Ukulele-electro-acoustic.JPG)
 
 # [What can you use tomorrow](http://bloggerspath.com/5-cool-unusual-gadgets-to-observe-the-future/) { data-background="img/touchscreen-guitar.jpg" }
 
-## Boost.Compute
+## [Boost.Compute](https://github.com/boostorg/compute)
 
 <center>
 * not yet part of boost library
@@ -1294,8 +1298,6 @@ by [Alno](https://commons.wikimedia.org/wiki/File:Ukulele-electro-acoustic.JPG)
 * OpenCL wrapper enabling vendor independent parallel algorithms
 
 * conceptually very similar to thrust/bolt
-
-* available on [github.com/boostorg/compute](https://github.com/boostorg/compute)
 </center>
 
 ~~~~ {.cpp}

@@ -57,17 +57,19 @@
        \node (mem_\id) [rectangle,draw=white,very thick,minimum width=1.cm,minimum height=1.cm,anchor=west] at($(line_\c.west)+(3.4,0)$) {\bfseries{}\dots};
    }
   
-   \node (thread_0) [draw=none,font=\huge,above] at($(mem_5.north) + (0,1.1)$) {$T_{0}$};
+   \node (thread_0) [draw=none,font=\huge,above,text=blue] at($(mem_5.north) + (0,1.1)$) {$T_{0}$};
    \draw[->,very thick,draw=blue] ($(thread_0.south) + (0,-.2)$) -- ($(mem_0.north) + (0,.1)$);
    
-   \node (thread_1) [draw=none,font=\huge,above] at($(mem_7.north) + (0,1.1)$) {$T_{1}$};
-   \draw[->,very thick,draw=red] ($(thread_1.south) + (0,-.2)$) -- ($(mem_15.north) + (0,.1)$);
+   \node (thread_1) [draw=none,font=\huge,above,text=red] at($(mem_7.north) + (0,1.1)$) {$T_{1}$};
+   \draw[->,very thick,draw=red] ($(thread_1.south) + (0,-.2)$) -- ($(mem_13.north) + (0,.1)$);
 
-   \node (thread_2) [draw=none,font=\huge,above] at($(mem_9.north) + (0,1.1)$) {$T_{2}$};
+   \node (thread_2) [draw=none,font=\huge,above,text=orange] at($(mem_9.north) + (0,1.1)$) {$T_{2}$};
    \draw[->,very thick,draw=orange] ($(thread_2.south) + (0,-.2)$) -- ($(mem_7.north) + (0,.1)$);
    
-   \node (thread_3) [draw=none,font=\huge,above] at($(mem_11.north) + (0,1.1)$) {$T_{3}$};
+   \node (thread_3) [draw=none,font=\huge,above,text=green] at($(mem_11.north) + (0,1.1)$) {$T_{3}$};
    \draw[->,very thick,draw=green] ($(thread_3.south) + (0,-.2)$) -- ($(mem_11.north) + (0,.1)$);
    
+   \node (thread_dots) [draw=none,font=\huge] at($(thread_3.east) + (1.,0)$) {\bfseries{}\dots};
+
 \end{tikzpicture}
 \end{document}
