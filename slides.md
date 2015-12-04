@@ -58,8 +58,7 @@ If not stated otherwise, the slides and all it's code are licensed under
 
 <center>
 ![](img/800px-MPI-CBG_building_outside_4pl.jpg)  
-*Scientific Software Engineer* at Max Planck Institute of Molecular Cell Biology and Genetics  
-(employed by [Scionics Computer Innovations GmbH](www.scionics.de))
+*Scientific Software Engineer* at Max Planck Institute of Molecular Cell Biology and Genetics
 </center>
 
 [/column]

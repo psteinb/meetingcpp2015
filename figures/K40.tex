@@ -23,7 +23,6 @@
   help lines/.style={color=lightgray,line width=.2pt},
   ]
 
-  
 %  \draw[dashed, very thick] (5,-1) rectangle (25,14) ;
   \foreach \c in {0,...,3}
   {
@@ -34,11 +33,16 @@
     \draw[step=.2] (smx_\c.south west) grid (smx_\c_topright);
   }
 
+
+
   \foreach \i in {0,...,4}
   \draw[-latex,very thick] ($(8,6)+(3.5*\i,0)$) -- ($(8,7.7)+(3.5*\i,0)$) 
   ;
   
   \node (dots) [text=white,font=\huge] at($(8,10)+(14,0)$) {\bfseries{}$11\times$};
+
+  \draw[dashed,very thick] (6,-1) rectangle ($(dots)+(1.75,2.5)$);
+
 
   \draw[very thick] ($(8,6)$) -- ($(8,6)+(3.5*4,0)$) ;
 
@@ -51,7 +55,7 @@
   
   %\draw[|<->|,very thick,double equal sign distance, line width=1mm, double distance=1.5mm,-Stealth] (dram.west) -- (cpu_ram.east);
   \node (middle) at($(dram.west)+(-3.2,0)$) {};
-  \node [double arrow, draw, line width=1pt,font=\huge,inner xsep=.6cm,inner ysep=.3cm] at(middle) {PCI Express};
+  \node [double arrow, draw, fill=black,line width=2pt,font=\huge,inner xsep=.6cm,inner ysep=.3cm] at(middle) {PCI Express};
   \draw[ultra thick] (l2cache.south) -- (dram.north);
 
 
