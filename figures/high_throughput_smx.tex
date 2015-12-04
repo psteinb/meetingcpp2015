@@ -58,5 +58,14 @@
   \node (W_2_dots) [font=\Huge,anchor=west] at(W_2_wait_b.east) {\bfseries{}\dots};
   \node (W_1_dots) [font=\Huge,anchor=west] at(W_1_wait_b.east) {\bfseries{}\dots};
 
+  %legend
+  \node (empty_work) [warp_work,minimum width=1.2cm,minimum height=.5cm] at($(W_1_delay_b.south)+(0,-1)$) {};
+  \node (label_work) [font=\normalsize,anchor=west] at (empty_work.east) {arithmetic};
+
+  \node (empty_delay) [warp_delay,minimum width=1.2cm,minimum height=.5cm] at($(label_work.east)+(.2,0)$) {};
+  \node (label_delay) [font=\normalsize,anchor=west] at (empty_delay.east) {gmem load};
+
+  \node (empty_wait) [warp_wait,minimum width=1.2cm,minimum height=.5cm] at($(label_delay.east)+(.2,0)$) {};
+  \node (label_wait) [font=\normalsize,anchor=west] at (empty_wait.east) {idle};
 \end{tikzpicture}
 \end{document}

@@ -422,6 +422,7 @@ height="200" border="0" class="img-rounded">
 [column,class="col-xs-8"]
 
 * grids/blocks serve as work distribution/sharing mechanism on device (occupancy)
+* blocks dispatched to SMX (in turn run warps)
 
 [/column]
 
@@ -430,8 +431,11 @@ height="200" border="0" class="img-rounded">
 
 ## Hiding Memory Latency
 
-* grid blocks spanned to SMX 
-* warp schedulers dispatch warps from blocks  
+* [Kepler](http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#multiprocessor-level):
+
+	* global memory access: 200-400 ticks per warp
+
+	* fp32 add/mul/fma: 32 per tick per warp
 
 . . .
 
@@ -451,17 +455,8 @@ width="1400" border="0" class="img-rounded">
 
 [/columns]
 
-
-&nbsp;
-
-
 * hide (memory) latency by pipelining active warps
 
-* [Kepler](http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#multiprocessor-level):
-
-	* global memory access: 200-400 ticks per warp
-
-	* fp32 add/mul/fma: 32 per tick per warp
 
 #  { data-background="img/1024px-unmarked_holes.jpg" }
 

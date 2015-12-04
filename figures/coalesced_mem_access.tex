@@ -47,8 +47,9 @@
    \foreach \t in {0,...,3}
    {
      \tikzmath{
-       integer \x, \id;
+       integer \x, \id, \j;
        \x = \t+30;
+       \j = \t+28;
        \id = \t+60;
      }
      % memory
@@ -58,7 +59,7 @@
      \draw[->,very thick] ($(mem_\x.north) + (0,1.1)$) -- ($(mem_\x.north) + (0,.1)$);
 
      %label
-     \node (label_\x) [draw=none,font=\huge,above] at($(mem_\x.north) + (0,1.1)$)  {$T_{\x}$};
+     \node (label_\x) [draw=none,font=\huge,above] at($(mem_\x.north) + (0,1.1)$)  {$T_{\j}$};
    }
    \draw[dashed,very thick] ($(mem_0.south west) + (-.1,-.1)$) rectangle ($(mem_33.north east) + (0.1,.1)$);
    

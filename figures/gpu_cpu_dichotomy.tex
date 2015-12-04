@@ -36,7 +36,7 @@
 
   \node (gpu_ram) [font=\huge,rectangle,minimum width=3.1cm,minimum height=2.1cm,very thick,draw=white,anchor=south] at($(gpu.south)-(0,4)$) {GPU Mem};
 
-  \node (PCIexpress_arrow) [double arrow, draw, line width=1pt,font=\Large,inner xsep=.6cm] at($(cpu_ram.east)!.5!(gpu_ram.west)$) {$\unit[12]{GB/s}$};
+  \node (PCIexpress_arrow) [double arrow, draw=white,fill=red, line width=2pt,font=\Large,inner xsep=.2cm] at($(cpu_ram.east)!.5!(gpu_ram.west)$) {$\sim\unit[12]{GB/s}$};
   \node (PCIexpress_name) [draw=none,font=\huge,below=1cm] at(PCIexpress_arrow.south) {PCIe v3 x16};
 
   \node (gpumem_arrow) [double arrow, draw, line width=1pt,inner xsep=.6cm,font=\Large,rotate=-90] at($(gpu.south)!.5!(gpu_ram.north)$) {};
