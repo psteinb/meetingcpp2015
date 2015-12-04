@@ -1347,7 +1347,7 @@ auto f3 = bulk_then(f1, par(n), more_work);
 when_all(f2, f3).wait();
 ~~~~
 <center>
-from SC15 (11/2015)
+from SC15 (11/2015, [agency](https://github.com/jaredhoberock/agency)) 
 </center>
 
 ## C++17
