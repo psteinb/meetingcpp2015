@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+        <meta name="author" content="Peter Steinbach" />
+            <title>C++ on GPUs done right?</title>
+    <meta name="description" content="C++ on GPUs done right?">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="my_reveal.css"/>
+        <link rel="stylesheet" href="reveal.js/css/theme/black.css" id="theme">
+    
+        <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+    
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+      if( window.location.search.match( /print-pdf/gi ) ) {
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = 'reveal.js/css/print/pdf.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+      }
+    </script>
+    <!--[if lt IE 9]>
+	<script src="reveal.js/lib/js/html5shiv.js"></script>
+	<![endif]-->
+          </head>
+  <body>
+        <div class="reveal">
+      <div class="slides">
+
+		<section>
+	  <h1 class="title">C++ on GPUs done right?</h1>
+	  	  <p>
+	    <b>Peter Steinbach</b><br>
+	    <emph>(Max Planck Institute of Molecular Cell Biology and Genetics, Dresden)</emph><br>
+	    <a href="mailto:steinbac@mpi-cbg.de">steinbac@mpi-cbg.de</a>
+	    <br><br>
+	  </p>
+	  
+	  <h3 class="date">Meeting C++, December 05, 2015</h3>
+	</section>
+		
+	<section><section id="disclaimers" class="titleslide slide level1"><h1>Disclaimer(s)</h1></section><section id="no-openglvulkan-here" class="slide level2">
+<h1>No OpenGL/Vulkan here!</h1>
+<div class="row vertical-align">
+<div class="col-xs-6">
+<figure>
+<img src="img/OpenGL_White_500px_Nov14.png" />
+</figure>
+</div>
+<div class="col-xs-6">
+<figure>
+<img src="img/Vulkan_White_500px_Mar15.png" />
+</figure>
+</div>
+</div>
+<center>
+© <a href="https://www.khronos.org/news/logos/">Khronos Group</a>
+</center>
+
+</section><section id="this-is-open-source" class="slide level2">
+<h1>This is Open-Source!</h1>
+<center>
+<p>Feel free to reply, discuss, inform, correct, ...</p>
+<strong><a href="https://github.com/psteinb/meetingcpp2015">github.com/psteinb/meetingcpp2015</a></strong>
+</center>
+
+<div class="fragment">
+<p> </p>
+<center>
+<p>If not stated otherwise, the slides and all it's code are licensed under</p>
+<strong><a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a></strong>
+</center>
+
+</div>
+</section><section id="who-am-i" class="slide level2">
+<h1>Who am I?</h1>
+<div class="row vertical-align">
+<div class="col-xs-8">
+<center>
+<img src="img/800px-MPI-CBG_building_outside_4pl.jpg" /><br /><em>Scientific Software Engineer</em> at Max Planck Institute of Molecular Cell Biology and Genetics
+</center>
+
+</div>
+<div class="col-xs-4">
+<ul>
+<li>Dresden, Saxony</li>
+<li>450 staff</li>
+<li>founded 2001</li>
+<li>cell biology</li>
+<li>genomics</li>
+<li>systems biology</li>
+</ul>
+</div>
+</div>
+</section><section id="what-do-i-do" class="slide level2">
+<h1>What do I do?</h1>
+<center>
+
+<video width="1400" poster="video/Celegans_lateral_one_view_versus_deconvolved.png" controls loop>
+<source src="video/Celegans_lateral_one_view_versus_deconvolved.webm" type='video/webm; codecs="vp8.0, vorbis"'> <source src="video/Celegans_lateral_one_view_versus_deconvolved.mp4" type='video/mp4'>
+<p>
+Movie does not work! Sorry!
+</p>
+</video>
+
+
+<p><em>Accelerating <a href="http://www.nature.com/nmeth/journal/v11/n6/full/nmeth.2929.html">scientific algorithms</a> on <a href="https://github.com/psteinb/gtc2015.git">GPUs</a> (multi-GB dataset, a lot of FFTs)</em></p>
+</center>
+
+</section><section id="outline" class="slide level2">
+<h1>Outline</h1>
+<div style="font-size : 1.5em">
+<center>
+<ol type="1">
+<li><p>Massively Parallel Programming</p></li>
+<li><p>Architecture</p></li>
+<li><p>What can you use today</p></li>
+<li>What can you use tomorrow
+</center>
+</li>
+</ol>
+</div>
+</section></section>
+<section><section id="massively-parallel-programming" class="titleslide slide level1" data-background="img/Titan_render.png" data-background-size="800px" style="margin-top: 20%"><h1>Massively Parallel Programming</h1></section><section id="yet-another-hype" class="slide level2">
+<h1>Yet Another Hype?</h1>
+<center>
+
+<object type="image/svg+xml" data="data/201x_acc_fraction.svg"
+width="1300" border="0" style="background-color: #FFFFFF;">
+</object>  
+
+<p>Data obtained from <a href="www.Top500.org">Top500.org</a></p>
+</center>
+
+</section><section id="vendor-options" class="slide level2">
+<h1>Vendor Options</h1>
+<!-- TODO: image origins -->
+<div class="row">
+<div class="col-xs-4">
+<center>
+<p>Nvidia Tesla<br /><img src="img/Nvidia-Tesla-K80_x400.jpg" /></p>
+GPU without Graphics
+</center>
+
+</div>
+<div class="col-xs-4">
+<center>
+<p>AMD FirePro<br /><img src="img/amd-firepro-s9150-server-graphics_x400.png" /></p>
+GPU without Graphics
+</center>
+
+</div>
+<div class="col-xs-4">
+<center>
+<p>Intel MIC<br /><img src="img/xeon_phi_x400.jpg" /></p>
+Not Covered Today!
+</center>
+
+</div>
+</div>
+</section><section id="vendor-flag-ships" class="slide level2">
+<h1>Vendor flag ships</h1>
+<!-- TODO: image origins -->
+<div class="row vertical-align">
+<div class="col-xs-4">
+<center>
+<em>Nvidia Tesla K80</em> <img src="img/Nvidia-Tesla-K80_x400.jpg" />
+</center>
+
+</div>
+<div class="col-xs-4">
+<center>
+<em>AMD FirePro S9170</em> <img src="img/amd-firepro-s9150-server-graphics_x400.png" />
+</center>
+
+</div>
+<div class="col-xs-4">
+<center>
+Intel Xeon Phi 5110P <img src="img/xeon_phi_x400.jpg" />
+</center>
+
+</div>
+</div>
+<p> </p>
+<div class="row vertical-align">
+<div class="col-xs-4">
+<center>
+<ul>
+<li>2x GK210 chipsets</li>
+<li>2x 12 GB GDDR5</li>
+<li>2x 288 GB/s to RAM</li>
+<li>8.7 TFlops SP</li>
+<li>2.9 TFlops DP
+</center>
+</li>
+</ul>
+</div>
+<div class="col-xs-4">
+<center>
+<ul>
+<li>1x Grenada XT</li>
+<li>32 GB GDDR5 RAM</li>
+<li>320 GB/s to RAM</li>
+<li>5.2 TFlops SP</li>
+<li>2.6 TFlops DP
+</center>
+</li>
+</ul>
+</div>
+<div class="col-xs-4">
+<center>
+<ul>
+<li>62x x86 CPUs</li>
+<li>8 GB GDDR5 RAM</li>
+<li>320 GB/s to RAM</li>
+<li>2.1 TFlops SP</li>
+<li>1.1 TFlops DP
+</center>
+</li>
+</ul>
+</div>
+</div>
+<!-- http://www.theregister.co.uk/2012/05/18/inside_nvidia_kepler2_gk110_gpu_tesla/ -->
+</section></section>
+<section><section id="architecture" class="titleslide slide level1" data-background="img/nvidia_kepler_die_shot.jpg"><h1>Architecture</h1></section><section id="section" class="slide level2" data-background="img/islay_1024px.png" data-background-size="800px">
+<h1></h1>
+</section><section id="section-1" class="slide level2" data-background="img/islay_annotated_1024px.png" data-background-size="800px">
+<h1></h1>
+</section><section id="food-hunt" class="slide level2">
+<h1>Food Hunt</h1>
+<div class="row vertical-align">
+<div class="col-xs-6">
+<!-- https://commons.wikimedia.org/wiki/File:Thunnus_orientalis_(Osaka_Kaiyukan_Aquarium).jpg -->
+<center>
+Tuna<br /><img src="img/1024px-Thunnus_orientalis_Osaka_Kaiyukan_Aquarium_cropped_x400.jpg" /><br />(fast, single, versatile)
+</center>
+
+</div>
+<div class="col-xs-6">
+<!-- https://commons.wikimedia.org/wiki/File:School_of_Pterocaesio_chrysozona_in_Papua_New_Guinea_1.jpg -->
+<center>
+Forage Fish<br /><img src="img/1024px-School_of_Pterocaesio_chrysozona_in_Papua_New_Guinea_1_x400.jpg" /><br />(small, many, use wakefield of neighbor)
+</center>
+
+</div>
+</div>
+</section><section id="the-same-principle-on-die" class="slide level2">
+<h1>The same principle on die</h1>
+<div class="row vertical-align">
+<div class="col-xs-6">
+<!-- TODO -->
+<center>
+CPU<br /><img src="img/Central-Processing-Unit_x400.jpeg" />
+</center>
+
+</div>
+<div class="col-xs-6">
+<!-- TODO -->
+<center>
+GPU<br /><img src="img/Nvidia-Tesla-K80_x400.jpg" />
+</center>
+
+</div>
+</div>
+<center>
+Note: Will use Nvidia Kepler as GPGPU example.
+</center>
+
+</section><section id="a-more-in-depth-look" class="slide level2">
+<h1>A more in-depth look</h1>
+<center>
+<object type="image/svg+xml" data="figures/K40.svg"
+width="1400" border="0" style="background-color: #FFFFFF;">
+</object>
+</center>
+
+<center>
+Nvidia K40: 15 Streaming Multiprocessors (SMX), 12 GB of GDDR5 DRAM
+</center>
+
+</section><section id="kepler-smx-close-up" class="slide level2">
+<h1>Kepler SMX Close-up</h1>
+<div style="text-align: center;margin-top: 4%;">
+<object type="image/svg+xml" data="figures/GK210_sm.svg"
+width="1600" border="0" style="background-color: #FFFFFF;">
+</object>
+</div>
+
+<center>
+CUDA core: 192 fp32 ops / clock <!-- (1/3 fp64 ops / clock) -->
+</center>
+
+
+</section><section id="simt-execution" class="slide level2">
+<h1>SIMT Execution</h1>
+<div class="row vertical-align">
+<div class="col-xs-2">
+<p><strong>Warp</strong></p>
+</div>
+<div class="col-xs-4">
+<object type="image/svg+xml" data="figures/thread.svg"
+height="200" border="0">
+</object>
+
+
+</div>
+<div class="col-xs-8">
+<ul>
+<li>smallest unit of concurrency: <em>32 threads</em></li>
+<li>thread = single CUDA core</li>
+<li>all threads execute same program</li>
+</ul>
+</div>
+</div>
+<div class="fragment">
+<div class="row vertical-align">
+<div class="col-xs-2">
+<p><strong>Block</strong></p>
+</div>
+<div class="col-xs-4">
+<object type="image/svg+xml" data="figures/thread_block.svg"
+height="200" border="0" class="img-rounded">
+</object>
+
+
+</div>
+<div class="col-xs-8">
+<ul>
+<li>can synchronize (barriers)</li>
+<li>can exchange data (common &quot;shared&quot; memory, etc.)</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="row vertical-align">
+<div class="col-xs-2">
+<p><strong>Grid</strong></p>
+</div>
+<div class="col-xs-4">
+<object type="image/svg+xml" data="figures/grid_block.svg"
+height="200" border="0" class="img-rounded">
+</object>
+
+
+</div>
+<div class="col-xs-8">
+<ul>
+<li>grids/blocks serve as work distribution/sharing mechanism on device (occupancy)</li>
+<li>blocks dispatched to SMX (in turn run warps)</li>
+</ul>
+</div>
+</div>
+</div>
+</section><section id="hiding-memory-latency" class="slide level2">
+<h1>Hiding Memory Latency</h1>
+<ul>
+<li><p><a href="http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#multiprocessor-level">Kepler</a>:</p>
+<ul>
+<li><p>global memory access: 200-400 ticks per warp</p></li>
+<li><p>fp32 add/mul/fma: 32 per tick per warp</p></li>
+</ul></li>
+</ul>
+<div class="fragment">
+<p> </p>
+<div class="row vertical-align">
+<div class="col-xs-12">
+<center>
+<object type="image/svg+xml" data="figures/high_throughput_smx.svg"
+width="1400" border="0" class="img-rounded">
+</object>
+</center>
+
+</div>
+</div>
+<ul>
+<li>hide (memory) latency by pipelining active warps</li>
+</ul>
+</div>
+</section></section>
+<section><section id="section-2" class="titleslide slide level1" data-background="img/1024px-unmarked_holes.jpg"><h1></h1></section><section id="compute-memory-access" class="slide level2">
+<h1>Compute &gt; Memory Access</h1>
+<center>
+<object type="image/svg+xml" data="figures/high_throughput_smx.svg"
+width="1400" border="0" class="img-rounded">
+</object>
+
+<p> </p>
+<ul>
+<li><p>device kernels</p>
+<ul>
+<li><p>arithmetic complexity needs to be high</p></li>
+<li><p>number of arithmetic operations &gt; number of load/store operations</p></li>
+</ul></li>
+</ul>
+</center>
+
+
+
+</section><section id="data-locality" class="slide level2">
+<h1>Data Locality</h1>
+<center>
+<div class="row vertical-align">
+<div class="col-xs-12">
+<object type="image/svg+xml" data="figures/gpu_cpu_dichotomy.svg"
+width="1400" border="0" class="img-rounded">
+</object>
+
+
+</div>
+</div>
+<p><strong>Keep data put as long as possible!</strong></p>
+</center>
+
+</section><section id="memory-access" class="slide level2">
+<h1>Memory Access</h1>
+<center>
+
+<p><strong>Bad: Non-Coalesced Memory Access</strong></p>
+<div class="row vertical-align">
+<div class="col-xs-12">
+<object type="image/svg+xml" data="figures/non_coalesced_mem_access.svg"
+width="1200" border="0" class="img-rounded">
+</object>
+
+<ul>
+<li>every thread accesses different cache line at random</li>
+<li>warp has to be replayed 31 times to complete 1 instruction</li>
+</ul>
+</div>
+</div>
+</center>
+
+
+<div class="fragment">
+<center>
+<p><strong>Good: Coalesced Memory Access</strong></p>
+<div class="row vertical-align">
+<div class="col-xs-12">
+<object type="image/svg+xml" data="figures/coalesced_mem_access.svg"
+width="1200" border="0" class="img-rounded">
+</object>
+
+
+
+</div>
+</div>
+</center>
+
+
+
+
+
+</div>
+</section><section id="summary-architecture" class="slide level2">
+<h1>Summary Architecture</h1>
+<center>
+<ul>
+<li><p><strong>GPUs are complicated beasts</strong></p></li>
+<li><p><strong>massive parallel compute power</strong> (per Watt)</p></li>
+<li><strong>massive ways to kill performance</strong>
+</center>
+</li>
+</ul>
+<!-- https://commons.wikimedia.org/wiki/File:Colorful_Guitars,_Haight_Street,_San_Francisco.jpg -->
+
+</section></section>
+<section><section id="what-can-you-use-today" class="titleslide slide level1" data-background="img/1024px-San_Francisco_Haight_Str_Guitar_Shop.jpg" style="color: black; margin: 0;margin-top: -100px;"><h1>What can you use today?</h1></section><section id="a-word-of-warning" class="slide level2">
+<h1>A Word of Warning!</h1>
+<div class="row vertical-align">
+<div class="col-xs-6">
+<center>
+<!-- https://pixabay.com/p-42657/?no_redirect -->
+<img src="img/800x_warning-42657_1280.png" />
+</center>
+
+</div>
+<div class="col-xs-6">
+<div style="font-size: 1.5em">
+<center>
+<ul>
+<li><p>32 threads is the minimum</p></li>
+<li>good tools are rare and almost never portable
+<center>
+</li>
+</ul>
+<div class="fragment">
+<center>
+<p><strong>Use a Library!</strong></p>
+</center>
+</div>
+
+</div>
+</div>
+</div>
+</section><section id="use-libraries" class="slide level2">
+<h1>Use Libraries!</h1>
+<div class="row">
+<div class="col-xs-6">
+<center>
+<strong>Vendor sponsored</strong>
+</center>
+
+</div>
+<div class="col-xs-6">
+<center>
+<strong>Open Source</strong>
+</center>
+
+</div>
+</div>
+<div class="row">
+<div class="col-xs-3 text-right">
+<center>
+<p><a href="https://developer.nvidia.com/gpu-accelerated-libraries">CUDA</a> based</p>
+<ul>
+<li>cuBLAS</li>
+<li>cuFFT</li>
+<li>cuDNN</li>
+<li>cuSparse</li>
+<li>cuSolver</li>
+<li>cuRAND<br />...</li>
+</ul>
+</center>
+
+</div>
+<div class="col-xs-3">
+<center>
+<p><a href="http://developer.amd.com/tools-and-sdks/opencl-zone/acl-amd-compute-libraries/">OpenCL</a> based</p>
+<ul>
+<li>clBLAS</li>
+<li>clFFT</li>
+<li>clSparse</li>
+<li>clRNG<br />...</li>
+</ul>
+</center>
+
+
+
+</div>
+<div class="col-xs-6">
+<center>
+<ul>
+<li><p>Multi-Purpose:<br /><a href="https://github.com/ComputationalRadiationPhysics/alpaka">Alpaka</a>, <a href="https://github.com/arrayfire/arrayfire">ArrayFire</a>,<br /><a href="https://github.com/ddemidov/vexcl">VexCL</a>, <a href="http://viennacl.sourceforge.net/">ViennaCL</a>, ...</p></li>
+<li><p>Image/Video Processing:<br /><a href="http://opencv.org/">OpenCV</a>, <a href="http://ffmpeg.org/">Ffmpeg</a>, ...</p></li>
+<li><p>Machine Learning:<br /> <a href="http://caffe.berkeleyvision.org/">Caffe</a>, <a href="http://torch.ch/">Torch</a>, ...</p></li>
+<li><p>Bioinformatics:<br /><a href="http://www.seqan.de/">SeqAn</a>, <a href="https://github.com/NVlabs/nvbio">nvbio</a>, ...</p></li>
+</ul>
+</center>
+
+</div>
+</div>
+</section><section id="baseline-example" class="slide level2">
+<h1>Baseline Example</h1>
+<center>
+<pre><code>void vector_sum(std::vector&lt;float&gt;&amp; a,
+                float scale, const std::vector&lt;float&gt;&amp; b) {
+    for (int i=0; i&lt;a.size(); i++) 
+        a[i] = a[i] * scale + b[i];
+}</code></pre>
+<strong>Vector Sum</strong>
+</center>
+
+
+</section><section id="cuda-overview" class="slide level2">
+<h1>CUDA Overview</h1>
+<div class="row vertical-align">
+<div class="col-xs-8">
+<center>
+<strong>C</strong>ompute <strong>U</strong>nified <strong>D</strong>evice <strong>A</strong>rchitecture<br />(<a href="https://developer.nvidia.com/cuda-zone">Nvidia CUDA Zone</a>)
+</center>
+
+</div>
+<div class="col-xs-4">
+<center>
+<img src="img/NVIDIA-CUDA.jpg" />
+</center>
+
+</div>
+</div>
+<center>
+<ul>
+<li><p>freeware tool suite, gpu library package and low/high level API(s)</p></li>
+<li><p>CUDA platform supports C and C++ with proprietary compiler</p></li>
+<li><p>binaries run on Nvidia hardware only</p></li>
+<li><p>source code split into host and device part</p>
+<ul>
+<li><p>host : C++11 and STL supported</p></li>
+<li><p>device: tiny subset of C++11<br />(no exceptions, no iostream, no virtual inheritance, no STL)</p></li>
+</ul></li>
+</ul>
+</center>
+
+
+</section><section id="simple-steps-in-cuda" class="slide level2">
+<h1><a href="http://devblogs.nvidia.com/parallelforall/easy-introduction-cuda-c-and-c/">5 Simple Steps In CUDA</a></h1>
+<p> </p>
+<div style="font-size: 1.5em">
+<center>
+<ol type="1">
+<li>Declare and allocate host and device memory.</li>
+<li>Initialize host data.</li>
+<li>Transfer data from the host to the device.</li>
+<li>Execute one or more kernels (vector sum).</li>
+<li>Transfer results from the device to the host.<br />
+</center></li>
+</ol>
+</div>
+</section><section id="cuda-code-mem-init" class="slide level2">
+<h1>CUDA Code: Mem Init</h1>
+<pre class="cpp"><code>int main(/*..*/){//..
+  std::vector&lt;float&gt; host_a(vsize,1.f);
+  std::vector&lt;float&gt; host_b(vsize,2.f);
+
+  float * device_a=nullptr, *device_b=nullptr;
+  cudaMalloc(&amp;device_a, vsize_byte); 
+  cudaMalloc(&amp;device_b, vsize_byte);
+
+  cudaMemcpy(device_a, &amp;host_a[0], vsize_byte,
+             cudaMemcpyHostToDevice);
+  cudaMemcpy(device_b, &amp;host_b[0], vsize_byte,
+             cudaMemcpyHostToDevice);</code></pre>
+</section><section id="cuda-code-compute" class="slide level2">
+<h1>CUDA Code: Compute</h1>
+<pre class="cpp"><code>//above main
+__global__ void vector_sum(std::size_t _size,
+               float _scale, float* _a, float* _b){
+  std::size_t index = blockIdx.x*blockDim.x + threadIdx.x;
+  if (index &lt; _size)
+    _a[index] = _scale*_a[index] + _b[index];
+}
+
+//in main: dispatch to device
+vector_sum&lt;&lt;&lt;(vsize+255)/256, 256&gt;&gt;&gt;(vsize,
+                                     host_d,
+                                     device_a,
+                                     device_b);</code></pre>
+</section><section id="cuda-code-mem-tx-clean-up" class="slide level2">
+<h1>CUDA Code: Mem TX + Clean-up</h1>
+<pre class="cpp"><code>  //transfer memory back
+  cudaMemcpy(&amp;host_a[0], device_a, vsize_byte,
+             cudaMemcpyDeviceToHost);
+
+  //clean-up
+  cudaFree(device_a);
+  cudaFree(device_b);
+  return 0;
+}
+</code></pre>
+</section><section id="cuda-wrap-up" class="slide level2">
+<h1>CUDA Wrap-up</h1>
+<div class="row">
+<div class="col-xs-6 text-success">
+<center>
+
+<ul>
+<li><p><em>free and working</em></p></li>
+<li><p>CUDA comes with a <em>ton of tools</em><br />(debugger, profiler, libraries, ...)</p></li>
+<li><p>CUDA comes with a <em>ton of examples</em></p></li>
+<li><p>very <em>flexible</em> (device instrinsics, locked memory handling, ...)</p></li>
+<li><p><em>nVidia very active</em> in porting scientific applications</p></li>
+<li><p><em>nVidia very active</em> C++ standardisation (Parallelism TS)</p></li>
+</ul>
+</center>
+
+</div>
+<div class="fragment">
+<div class="col-xs-6 text-warning">
+<center>
+
+<ul>
+<li><p>plain C API<br />(memory allocation, error handling, asynchronous calls, ...)</p></li>
+<li><p>grid dispatch is error prone<br />(code repetition in index calculation)</p></li>
+<li><p>compiler is sometimes hard to come by (using boost, OpenMP interoperability)</p></li>
+<li><p><code>__keyword__</code> disrupt design (redundancy, maintainability)</p></li>
+</ul>
+</center>
+
+</div>
+</div>
+</div>
+</section><section id="cuda-is-like-..." class="slide level2" data-background="img/1024px-Taylor415_acoustic.jpg">
+<h1>CUDA is like ...</h1>
+</section><section id="opencl" class="slide level2">
+<h1>OpenCL</h1>
+<div class="row vertical-align">
+<div class="col-xs-6">
+<center>
+<strong>Open C</strong>ompute <strong>L</strong>anguage<br />(<a href="https://www.khronos.org/opencl/">khronos.org/opencl</a>)
+</center>
+
+</div>
+<div class="col-xs-4 bg-primary">
+<center>
+<em>No Logo due to Apple's Copyright</em>
+</center>
+
+</div>
+</div>
+<p> </p>
+<center>
+<ul>
+<li><p>open, royalty-free standard for cross-platform, parallel programming</p></li>
+<li><p>designed to run on CPUs, GPUs, FPGAs, DSPs, ...</p></li>
+<li><p>maintained by non-profit technology consortium Khronos Group</p></li>
+<li><p>source code split into host and device part</p>
+<ul>
+<li><p>host : C/C++ based API (lower level than CUDA)</p></li>
+<li><p>device: C11 derived language (<a href="https://www.khronos.org/registry/cl/sdk/2.0/docs/OpenCL-2.0-refcard.pdf">OpenCL 2.0</a>)</p></li>
+</ul></li>
+</ul>
+</center>
+
+</section><section id="opencl-kernel" class="slide level2">
+<h1>OpenCL Kernel</h1>
+<pre class="cpp"><code>const char *kernelSource =                     &quot;\n&quot; \
+&quot;__kernel void vecAdd(  __global float *a,      \n&quot; \
+&quot;                       __global float *b,      \n&quot; \
+&quot;                       __global float *c,      \n&quot; \
+&quot;                       const unsigned int n)   \n&quot; \
+&quot;{                                              \n&quot; \
+&quot;    int id = get_global_id(0);                 \n&quot; \
+&quot;                                               \n&quot; \
+&quot;    //Make sure we do not go out of bounds     \n&quot; \
+&quot;    if (id &lt; n)                                \n&quot; \
+&quot;        c[id] = a[id] + b[id];                 \n&quot; \
+&quot;}                                              \n&quot; \
+                                               &quot;\n&quot; ;</code></pre>
+<center>
+from <a href="https://www.olcf.ornl.gov/tutorials/opencl-vector-addition/">www.olcf.ornl.gov</a>
+</center>
+
+</section><section id="opencl-is-like-..." class="slide level2">
+<h1>OpenCL is like ...</h1>
+<center>
+<img src="img/Andy_McKee_January_2008.jpg" alt="by Kasra Ganjavi" />
+</center>
+
+</section><section id="thrust" class="slide level2">
+<h1>thrust</h1>
+<div class="row vertical-align">
+<div class="col-xs-6">
+<center>
+<em>parallel algorithms library which resembles the C++ Standard Template Library (STL)</em>
+</center>
+
+</div>
+<div class="col-xs-4">
+<center>
+<img src="img/thrust_logo.png" /><br /><a href="http://thrust.github.io/">thrust.github.io</a>
+</center>
+
+</div>
+</div>
+<p> </p>
+<center>
+<ul>
+<li><p>open source (Apache v2 license)</p></li>
+<li><p>interoperability with CUDA, TBB and OpenMP (possible backends)</p></li>
+<li>high level interface compared to CUDA/OpenCL
+</center>
+
+</li>
+</ul>
+</section><section id="thrust-code-functor" class="slide level2">
+<h1>thrust Code: Functor</h1>
+<pre class="cpp"><code>struct saxpy_functor :
+public thrust::binary_function&lt;float,float,float&gt;
+{
+    const float a;
+    saxpy_functor(float _a) : a(_a) {}
+
+    __host__ __device__
+    float operator()(const float&amp; x,
+                     const float&amp; y
+                    ) const { 
+            return a * x + y;
+        }
+};</code></pre>
+</section><section id="thrust-code-gpu-dispatch" class="slide level2">
+<h1>thrust Code: GPU dispatch</h1>
+<pre class="cpp"><code>int main(//...){//..
+
+  thrust::host_vector&lt;float&gt; host_a(N,1.f);
+  thrust::host_vector&lt;float&gt; host_b(N,2.f);
+
+  thrust::device_vector&lt;float&gt; dev_a = host_a;
+  thrust::device_vector&lt;float&gt; dev_b = host_b;
+
+  thrust::transform(dev_a.begin(),dev_a.end(), 
+                    dev_b.begin(),
+                    dev_a.begin(),
+                    saxpy_functor(scale));  
+}</code></pre>
+</section><section id="thrust-wrap-up" class="slide level2">
+<h1>thrust Wrap-up</h1>
+<div class="row">
+<div class="col-xs-6 text-success">
+<center>
+<ul>
+<li><p>C++ and STL for GPUs (and CPUs)!</p></li>
+<li><p>container and algorithm API well thought through</p></li>
+<li><p>code becomes readable/maintainable (at least for a C++Dev)</p></li>
+<li><p>algorithms can be dispatched from device kernels as well</p></li>
+<li>many examples, active community
+</center>
+</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="col-xs-6 text-warning">
+<center>
+<ul>
+<li><p>loss of flexibility:</p>
+<ul>
+<li><p>host-device i/o (pinned memory allocator considered experimental)</p></li>
+<li><p>index information only available through kernel built-ins</p></li>
+<li><p>grid distpatch of kernel by thrust library (occupancy)</p></li>
+</ul></li>
+<li><p>kernel optimisations = CUDA<br />(<a href="https://nvlabs.github.io/cub/">CUB</a> library?)</p></li>
+<li>C++11, C++17 ?
+</center>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section><section id="thrust-is-like-..." class="slide level2">
+<h1>thrust is like ...</h1>
+<center>
+<img src="img/baseguitar.jpg" alt="by axeplace.com" />
+</center>
+
+</section><section id="hcc" class="slide level2">
+<h1>HCC</h1>
+<div class="row vertical-align">
+<div class="col-xs-6">
+<center>
+<strong>H</strong>eterogenous <strong>C</strong>ompute <strong>C</strong>ompiler<br />(<a href="https://bitbucket.org/multicoreware/hcc/wiki/Home">bitbucket.org/multicoreware/hcc</a>)
+</center>
+
+</div>
+<div class="col-xs-4">
+<center>
+meant for APU<br /><img src="img/apu_comic.gif" /><br /><strong>A</strong>ll-purpose G<strong>PU</strong>s
+</center>
+
+</div>
+</div>
+<center>
+<ul>
+<li><p>single source C++ compiler (for CPU, GPU and APU targets)</p></li>
+<li><p>supports C++AMP 1.2, HC, OpenMP 4, C++1x</p></li>
+<li><p>currently being ported to discrete GPUs</p></li>
+<li>very young project <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0069r0.pdf">presented</a> in Kona
+</center>
+</li>
+</ul>
+</section><section id="hcc-vector-sum-camp" class="slide level2">
+<h1>HCC Vector Sum (C++AMP)</h1>
+<pre class="cpp"><code>using namespace concurrency;
+
+void amp_sum(vector&lt;float&gt;&amp; _va,
+             const vector&lt;float&gt;&amp; _vb,
+             float _scale){
+         
+  extent&lt;1&gt; ext_a(_va.size()),ext_b(_vb.size());
+
+  array_view&lt;float, 1&gt; view_a(ext_a,_va); 
+  array_view&lt;const float, 1&gt; view_b(ext_b,_vb); </code></pre>
+</section><section id="hcc-continued" class="slide level2">
+<h1>HCC continued</h1>
+<pre class="cpp"><code>  parallel_for_each(view_a.get_extent(),
+            [=](index&lt;1&gt; idx) restrict(amp)
+            {
+              view_a[idx] = view_a[idx]*_scale + view_b[idx];
+            }
+            );
+
+  view_a.synchronize();
+}</code></pre>
+</section><section id="hcc-wrap-up" class="slide level2">
+<h1>HCC Wrap-up</h1>
+<div class="row">
+<div class="col-xs-6 text-success">
+<center>
+
+<ul>
+<li><p>API focusses on problem-solving and flexibility</p></li>
+<li><p>API appears to be lightweight (array views)</p></li>
+<li><p>multiple binary backends (SPIR-V, OpenCL, ...)</p></li>
+<li><p>multiple hardware backends (CPU, GPU, APU)</p></li>
+<li><p>homogenous C++ source code</p></li>
+<li><p>function continuations supported</p>
+<pre><code>future1.then(future2)//..</code></pre>
+</center>
+</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="col-xs-6 text-warning">
+<center>
+
+<ul>
+<li><p>young project, API still fluid (<code>concurrency::</code> =&gt; <code>hc::</code>)</p></li>
+<li><p>no tooling yet (debugger, profiler, ...)</p></li>
+<li><p>performance yield unclear</p></li>
+<li><p>combined API for integrated and discrete GPUs</p></li>
+<li><p>HSA/AMD road map unclear</p></li>
+</ul>
+</center>
+
+</div>
+</div>
+</div>
+</section><section id="hc-is-like-..." class="slide level2">
+<h1>HC is like ...</h1>
+<center>
+<p><img src="img/Elektrofryingpan_landscape.jpg" /><br />1932, by <a href="https://commons.wikimedia.org/wiki/File:Elektrofryingpan.jpg">Museum of Making Music at English Wikipedia</a></p>
+</center>
+
+
+</section><section id="pragma-based-approaches" class="slide level2">
+<h1>Pragma based approaches</h1>
+<div class="row vertical-align">
+<div class="col-xs-6">
+<center>
+<strong>Open M</strong>ulti-<strong>P</strong>rocessing<br />(<a href="http://openmp.org/">openmp.org</a>)
+</center>
+
+</div>
+<div class="col-xs-4">
+<center>
+<img src="img/OpenMP_logo.png" /><br />
+</center>
+
+</div>
+</div>
+<pre class="cpp"><code>void vector_sum(int size, float scale,
+                float * restrict a, float * restrict b) {
+    #pragma omp target map(to:b[0:n], size, scale) map(a[0:n])
+    {
+        #pragma omp parallel for
+        for (int i=0; i&lt;size; i++) {
+            a[i] = a[i] * scale + b[i];
+        }
+    }
+}</code></pre>
+<center>
+accelerator target since version 4.0 (<a href="https://gcc.gnu.org/wiki/Offloading">gcc 5.0+</a>, <a href="https://software.intel.com/en-us/intel-parallel-studio-xe">icc 16+</a>, <a href="http://www.pathscale.com/enzo">ENZO2016</a>)
+</center>
+
+</section><section id="pragmas-continued" class="slide level2">
+<h1>Pragmas continued</h1>
+<div class="row vertical-align">
+<div class="col-xs-6">
+<center>
+<strong>Open Acc</strong>elerator<br />(<a href="http://openacc.org/">openacc.org</a>)
+</center>
+
+</div>
+<div class="col-xs-4">
+<center>
+<img src="img/openacc_logo.jpg" /><br />
+</center>
+
+</div>
+</div>
+<pre class="cpp"><code>void vector_sum(int size, float scale, float *a, float *b) {
+
+    #pragma acc parallel copy(a[0:size]) copyin(b[0:size])
+    #pragma acc loop
+    for (int i = 0; i &lt; size; ++i)
+        a[i] = scale*a[i] + b[i];
+    
+}</code></pre>
+<center>
+(partially available in <a href="https://gcc.gnu.org/wiki/Offloading">gcc 5.0+</a>,<br />fully in <a href="https://www.pgroup.com/resources/accel.htm">pgi</a> &amp; <a href="http://www.pathscale.com/enzo">ENZO2016</a> compiler)
+</center>
+
+</section><section id="pragma-wrap-up" class="slide level2">
+<h1>Pragma Wrap-up</h1>
+<div class="row">
+<div class="col-xs-6 text-success">
+<center>
+
+<ul>
+<li><p>OpenMP is (already) a success story<br />(why not OpenACC as well)</p></li>
+<li><p>dream: one-line injection and code is fast</p></li>
+<li><p>strong industrial support (tooling)</p></li>
+<li><p>GPU: perfect fit for upgrading legacy code or prototyping</p></li>
+</ul>
+</center>
+
+</div>
+<div class="fragment">
+<div class="col-xs-6 text-warning">
+<center>
+
+<ul>
+<li><p>OpenMP works well on shared memory CPUs</p></li>
+<li><p>(discrete) GPUs have different architecture than CPUs</p></li>
+<li><p>language in a language ??</p></li>
+<li><p>OpenACC, OpenMP dichotomy (will users/applications loose?)</p></li>
+</ul>
+</center>
+
+</div>
+</div>
+</div>
+</section><section id="pragmas-are-like-..." class="slide level2">
+<h1>Pragmas are like ...</h1>
+<center>
+<p><img src="img/1024px-Ukulele-electro-acoustic.jpg" /><br />by <a href="https://commons.wikimedia.org/wiki/File:Ukulele-electro-acoustic.JPG">Alno</a></p>
+</center>
+
+
+
+</section></section>
+<section><section id="what-can-you-use-tomorrow" class="titleslide slide level1" data-background="img/touchscreen-guitar.jpg"><h1><a href="http://bloggerspath.com/5-cool-unusual-gadgets-to-observe-the-future/">What can you use tomorrow</a></h1></section><section id="boost.compute" class="slide level2">
+<h1><a href="https://github.com/boostorg/compute">Boost.Compute</a></h1>
+<center>
+<ul>
+<li><p>not yet part of boost library</p></li>
+<li><p>OpenCL wrapper enabling vendor independent parallel algorithms</p></li>
+<li>conceptually very similar to thrust/bolt
+</center>
+</li>
+</ul>
+<pre class="cpp"><code>    compute::device gpu = compute::system::default_device();
+    compute::context ctx(gpu);
+    compute::command_queue queue(ctx, gpu);
+
+    compute::vector&lt;float&gt; device_a(a.size(), ctx);//etc..
+    compute::copy(host_a.begin(), host_a.end(),
+        device_a.begin(), queue);//etc..
+
+    compute::transform(device_a.begin(),device_a.end(),
+        device_a.begin(),compute::add&lt;float&gt;(),queue);</code></pre>
+</section><section id="opencl-tomorrow" class="slide level2">
+<h1>OpenCL tomorrow</h1>
+<center>
+<p><img src="img/khronos_road_map.png" /><br />from <a href="https://www.khronos.org/assets/uploads/developers/library/2015-sigasia/SIGGRAPH-Asia_Nov15.pdf">SIGGRAPH Asia 11/2015</a></p>
+<strong>Take away</strong>: SPIR-V promising, SYCL very similar to boost.compute
+</center>
+
+</section><section id="cuda-tomorrow" class="slide level2">
+<h1>CUDA tomorrow</h1>
+<pre class="cpp"><code>vector_sum&lt;&lt;&lt;(vsize+255)/256, 256&gt;&gt;&gt;(/*..*/);
+
+launch(vector_sum, /*..*/);</code></pre>
+<center>
+from GTC2015 (03/2015)
+</center>
+
+<div class="fragment">
+<pre class="cpp"><code>auto f1 = bulk_async(par(n), [=](parallel_agent &amp;self)
+                            {
+                              int i = self.index();
+                              z[i] = a * x[i] + y[i];
+                            });
+ 
+auto f2 = bulk_then(f1, par(n), other_work);
+auto f3 = bulk_then(f1, par(n), more_work);
+when_all(f2, f3).wait();</code></pre>
+<center>
+from SC15 (11/2015, <a href="https://github.com/jaredhoberock/agency">agency</a>)
+</center>
+
+</div>
+</section><section id="c17" class="slide level2">
+<h1>C++17</h1>
+<div class="row vertical-align">
+<div class="col-xs-6">
+<center>
+<p>Published already:</p>
+<a href="https://github.com/cplusplus/parallelism-ts">Parallelism TS</a>, <a href="https://github.com/cplusplus/concurrency-ts">Concurrency TS</a>
+</center>
+
+</div>
+<div class="col-xs-4">
+<center>
+<a href="https://isocpp.org"><img src="img/logo-cpp.jpg" /></a><br />
+</center>
+
+</div>
+</div>
+<pre class="cpp"><code>transform(  std::experimental::parallel::par,
+            std::begin(a), std::end(a),
+            std::begin(b),
+            std::begin(a)
+            [&amp;](float&amp; a, const float&amp; b) {
+                a = scale*a + b;
+            });</code></pre>
+<center>
+<p><strong>vendors plan to support this with</strong></p>
+<div style="width: 70%;align: center;">
+<pre><code>std::parallel::cuda, std::parallel::opencl</code></pre>
+</div>
+</center>
+
+</section><section id="my-c17-gpu-excitement" class="slide level2">
+<h1>My C++17 GPU excitement</h1>
+<div class="fragment">
+<pre class="cpp"><code>future&lt;int&gt; f1 = copy_to_device();
+future&lt;int&gt; f2 = f1.then([](future&lt;int&gt; f) {
+                    future&lt;int&gt; f3 = start_compute();
+                    return f3;
+                    });
+future&lt;int&gt; f3 = f3.then([](future&lt;int&gt; f){
+                    return copy_to_host();
+                    }
+                    );</code></pre>
+<center>
+<p>  taken from concurrency TS</p>
+<ul>
+<li><p>better API to coordinate asynchronous transfers and computations</p></li>
+<li><p>future: use <code>(a)wait/then</code> and friends to express data dependencies</p></li>
+<li>support by compiler vendors needed
+</center>
+
+</li>
+</ul>
+</div>
+</section></section>
+<section><section id="summary" class="titleslide slide level1"><h1>Summary</h1></section><section id="c-on-gpus-done-right" class="slide level2">
+<h1>C++ on GPUs done right?</h1>
+<center>
+
+<ul>
+<li><p>in production: almost dominated by C99</p></li>
+<li><p>on the horizon: performant, flexible and maintainable <strong>C++ APIs</strong> emerging</p></li>
+</ul>
+<img src="img/800px-San_Francisco_Haight_Str_Guitar_Shop.jpg" />
+</center>
+
+
+</section><section id="gpus-are-there-to-stay" class="slide level2">
+<h1>GPUs are there to stay</h1>
+<p> </p>
+<p><strong>GPUs today convert workstations to compute clusters, and clusters to supercomputers!</strong></p>
+<p> </p>
+<center>
+<ul>
+<li><p>GPUs architecture is complex: obtaining max. performance challenging</p></li>
+<li>accelerators are a must on the road to exascale/performance
+</center>
+
+
+</li>
+</ul>
+</section><section id="acknowledgements" class="slide level2">
+<h1>Acknowledgements</h1>
+<center>
+
+<div class="row">
+<div class="col-xs-4">
+<p><a href="http://www.mpi-cbg.de">MPI CBG</a> / <a href="www.scionics.de">Scionics Computer Innovations GmbH</a></p>
+</div>
+<div class="col-xs-8 text-left">
+<p><em>Robert Haase, Ian Henry, Benoit Lombardot, Jeff Oegema</em></p>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-4">
+<p><a href="http://ccoe-dresden.de/">GPU Center of Excellence</a></p>
+</div>
+<div class="col-xs-8 text-left">
+<p><em>Guido Juckeland, Thomas Karnagel, René Widera, Erik Zenker</em></p>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-4">
+<p><a href="http://amd.com/">AMD</a>; <a href="http://www.multicorewareinc.com/">Multicoreware</a></p>
+</div>
+<div class="col-xs-8 text-left">
+<p><em>Greg Stoner, Ben Sander, Chan SiuChi; Jack Chung</em></p>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-4">
+<p><a href="http://nvidia.com/">nVidia</a></p>
+</div>
+<div class="col-xs-8 text-left">
+<p><em>Axel Köhler</em></p>
+</div>
+</div>
+</center>
+
+
+</section><section id="thank-you" class="slide level2">
+<h1>Thank you!</h1>
+<center>
+<img src="img/Sleeping_students.jpg" />
+</center>
+
+</section><section id="section-3" class="slide level2" style="font-size: 1.5em">
+<h1></h1>
+<center>
+<p><strong>For Questions, Comments, Complaints, Compliments, ... </strong></p>
+<strong><a href="https://github.com/psteinb/meetingcpp2015">github.com/psteinb/meetingcpp2015</a></strong>
+</center>
+
+
+
+
+
+</section><section id="links" class="slide level2">
+<h1>Links</h1>
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: right;">https://isocpp.org</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5 Simple Steps In CUDA</td>
+<td style="text-align: right;">http://devblogs.nvidia.com/parallelforall/easy-introduction-cuda-c-and-c/</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">AMD</td>
+<td style="text-align: right;">http://amd.com/</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Alno</td>
+<td style="text-align: right;">https://commons.wikimedia.org/wiki/File:Ukulele-electro-acoustic.JPG</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Alpaka</td>
+<td style="text-align: right;">https://github.com/ComputationalRadiationPhysics/alpaka</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ArrayFire</td>
+<td style="text-align: right;">https://github.com/arrayfire/arrayfire</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Boost.Compute</td>
+<td style="text-align: right;">https://github.com/boostorg/compute</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CUB</td>
+<td style="text-align: right;">https://nvlabs.github.io/cub/</td>
+</tr>
+</tbody>
+</table>
+</section><section id="links-27" class="slide level2">
+<h1>Links 2/7</h1>
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">CUDA</td>
+<td style="text-align: right;">https://developer.nvidia.com/gpu-accelerated-libraries</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">Caffe</td>
+<td style="text-align: right;">http://caffe.berkeleyvision.org/</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">Concurrency TS</td>
+<td style="text-align: right;">https://github.com/cplusplus/concurrency-ts</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">Creative Commons Attribution 4.0 International License</td>
+<td style="text-align: right;">http://creativecommons.org/licenses/by/4.0/</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">ENZO2016</td>
+<td style="text-align: right;">http://www.pathscale.com/enzo</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">Ffmpeg</td>
+<td style="text-align: right;">http://ffmpeg.org/</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">GPU Center of Excellence</td>
+<td style="text-align: right;">http://ccoe-dresden.de/</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">GPUs</td>
+<td style="text-align: right;">https://github.com/psteinb/gtc2015.git</td>
+</tr>
+</tbody>
+</table>
+</section><section id="links-37" class="slide level2">
+<h1>Links 3/7</h1>
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">Kasra Ganjavi</td>
+<td style="text-align: right;">https://en.wikipedia.org/wiki/File:Andy_McKee,<em>January</em>2008.jpg</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">Kepler</td>
+<td style="text-align: right;">http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#multiprocessor-level</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">Khronos Group</td>
+<td style="text-align: right;">https://www.khronos.org/news/logos/</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">MPI CBG</td>
+<td style="text-align: right;">http://www.mpi-cbg.de</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">Multicoreware</td>
+<td style="text-align: right;">http://www.multicorewareinc.com/</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">Museum of Making Music at English Wikipedia</td>
+<td style="text-align: right;">https://commons.wikimedia.org/wiki/File:Elektrofryingpan.jpg</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">Nvidia CUDA Zone</td>
+<td style="text-align: right;">https://developer.nvidia.com/cuda-zone</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">OpenCL</td>
+<td style="text-align: right;">http://developer.amd.com/tools-and-sdks/opencl-zone/acl-amd-compute-libraries/</td>
+</tr>
+</tbody>
+</table>
+</section><section id="links-47" class="slide level2">
+<h1>Links 4/7</h1>
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">OpenCL 2.0</td>
+<td style="text-align: right;">https://www.khronos.org/registry/cl/sdk/2.0/docs/OpenCL-2.0-refcard.pdf</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">OpenCV</td>
+<td style="text-align: right;">http://opencv.org/</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">Parallelism TS</td>
+<td style="text-align: right;">https://github.com/cplusplus/parallelism-ts</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">SIGGRAPH Asia 11/2015</td>
+<td style="text-align: right;">https://www.khronos.org/assets/uploads/developers/library/2015-sigasia/SIGGRAPH-Asia_Nov15.pdf</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">Scionics Computer Innovations GmbH</td>
+<td style="text-align: right;">www.scionics.de</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">SeqAn</td>
+<td style="text-align: right;">http://www.seqan.de/</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">Top500.org</td>
+<td style="text-align: right;">www.Top500.org</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">Torch</td>
+<td style="text-align: right;">http://torch.ch/</td>
+</tr>
+</tbody>
+</table>
+</section><section id="links-57" class="slide level2">
+<h1>Links 5/7</h1>
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">VexCL</td>
+<td style="text-align: right;">https://github.com/ddemidov/vexcl</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">ViennaCL</td>
+<td style="text-align: right;">http://viennacl.sourceforge.net/</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">What can you use tomorrow</td>
+<td style="text-align: right;">http://bloggerspath.com/5-cool-unusual-gadgets-to-observe-the-future/</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">agency</td>
+<td style="text-align: right;">https://github.com/jaredhoberock/agency</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">axeplace.com</td>
+<td style="text-align: right;">http://axepalace.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/d/v/dv020_jpg_jumbo_h70433.001_black_flat3.jpg</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">bitbucket.org/multicoreware/hcc</td>
+<td style="text-align: right;">https://bitbucket.org/multicoreware/hcc/wiki/Home</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">gcc 5.0+</td>
+<td style="text-align: right;">https://gcc.gnu.org/wiki/Offloading</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">github.com/psteinb/meetingcpp2015</td>
+<td style="text-align: right;">https://github.com/psteinb/meetingcpp2015</td>
+</tr>
+</tbody>
+</table>
+</section><section id="links-67" class="slide level2">
+<h1>Links 6/7</h1>
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">icc 16+</td>
+<td style="text-align: right;">https://software.intel.com/en-us/intel-parallel-studio-xe</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">khronos.org/opencl</td>
+<td style="text-align: right;">https://www.khronos.org/opencl/</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">nVidia</td>
+<td style="text-align: right;">http://nvidia.com/</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">nvbio</td>
+<td style="text-align: right;">https://github.com/NVlabs/nvbio</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">openacc.org</td>
+<td style="text-align: right;">http://openacc.org/</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">openmp.org</td>
+<td style="text-align: right;">http://openmp.org/</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">pgi</td>
+<td style="text-align: right;">https://www.pgroup.com/resources/accel.htm</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">presented</td>
+<td style="text-align: right;">http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0069r0.pdf</td>
+</tr>
+</tbody>
+</table>
+</section><section id="links-77" class="slide level2">
+<h1>Links 7/7</h1>
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">scientific algorithms</td>
+<td style="text-align: right;">http://www.nature.com/nmeth/journal/v11/n6/full/nmeth.2929.html</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">thrust.github.io</td>
+<td style="text-align: right;">http://thrust.github.io/</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">www.olcf.ornl.gov</td>
+<td style="text-align: right;">https://www.olcf.ornl.gov/tutorials/opencl-vector-addition/</td>
+</tr>
+</tbody>
+</table>
+</section></section>
+      </div>
+    </div>
+
+
+    <script src="reveal.js/lib/js/head.min.js"></script>
+    <script src="reveal.js/js/reveal.js"></script>
+
+    <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+      controls: false,
+      progress: true,
+      history: true,
+      center: true,
+      
+      slideNumber: true,
+      // The "normal" size of the presentation, aspect ratio will be preserved
+      // when the presentation is scaled to fit different resolutions. Can be
+      // specified using percentage units.
+      width: '1600',
+      height: 1080,
+
+      // Factor of the display size that should remain empty around the content
+      margin: 0.01,
+
+      // Bounds for smallest/largest possible scale to apply to content
+      minScale: 0.2,
+      maxScale: 1.5,
+
+      theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+      transition: 'slide', // default/cube/page/concave/zoom/linear/fade/none
+
+      // Optional libraries used to extend on reveal.js
+      dependencies: [
+      { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+            { src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+            { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+      { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+      //          { src: 'reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+      //          { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]});
+    </script>
+      </body>
+</html>
