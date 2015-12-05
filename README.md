@@ -1,10 +1,24 @@
 # meetingcpp2015
 
-repository for slides and code examples for my MeetingCpp talk in 2015
+This is my repository for slides and code examples for my MeetingC++ talk, Dec 5th 2015, in Berlin.
 
 # Slides
 
-Can be view under [idisk.mpi-cbg.de/~steinbac/meetingcpp2015](idisk.mpi-cbg.de/~steinbac/meetingcpp2015)
+The slides Can be viewed under [idisk.mpi-cbg.de/~steinbac/meetingcpp2015](idisk.mpi-cbg.de/~steinbac/meetingcpp2015).
+
+# Dependencies
+
+If you wanto to buil the slides, you need:
+
+* pandoc 
+* [pandocfilters](https://github.com/psteinb/pandocfilters)
+* texlive or similar latex suite
+* pgf (version 3.0 or higher)
+* GNU make
+
+If anything does not build, please let me know.
+
+The cude examples were tested under CUDA 7 and hcc/master of Dec 1st, 2015.
 
 # License
 
