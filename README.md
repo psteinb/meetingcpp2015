@@ -4,7 +4,7 @@ This is my repository for slides and code examples for my MeetingC++ talk, Dec 5
 
 # Slides
 
-The slides Can be viewed under [idisk.mpi-cbg.de/~steinbac/meetingcpp2015](idisk.mpi-cbg.de/~steinbac/meetingcpp2015) or locally by opening index.html with a browser of your choice (chrome/chromium and firefox give the best results).
+The slides can be viewed under [idisk.mpi-cbg.de/~steinbac/meetingcpp2015](idisk.mpi-cbg.de/~steinbac/meetingcpp2015) or locally by opening index.html with a browser of your choice (chrome/chromium and firefox give the best results).
 
 # Dependencies
 
