@@ -6,6 +6,10 @@ This is my repository for slides and code examples for my MeetingC++ talk, Dec 5
 
 The slides can be viewed under [idisk.mpi-cbg.de/~steinbac/meetingcpp2015](idisk.mpi-cbg.de/~steinbac/meetingcpp2015) or locally by opening index.html with a browser of your choice (chrome/chromium and firefox give the best results).
 
+# Video Recording
+
+A video recording of the talk is available on [youtube](https://www.youtube.com/watch?v=z43l_LaOqnM).
+
 # Dependencies
 
 If you wanto to buil the slides, you need:
