@@ -114,12 +114,14 @@ refine <- function(input_df){
   input_df
 }
 
-top25 <- top25_reduced %>% group_by(Top500_Year, Top500_Month) %>% summarise(occ = n(), contained_co_proc = sum(Accelerator.Co.Processor != factor("None")), contained_acc = sum(!(Accelerator %in% factor("None"))))
+top25 <- top25_reduced %>% group_by(Top500_Year, Top500_Month) %>% summarise(occ = n(), contained_co_proc = sum(Accelerator.Co.Processor != factor("None"))## , contained_acc = sum(!(Accelerator %in% factor("None")))
+                                                                             )
 top25 <- refine(top25)
 top25$list <- factor(paste("Top",rank_limit,sep=""))
 #top25
 
-per_year <- top500_reduced %>% group_by(Top500_Year, Top500_Month) %>% summarise(occ = n(), contained_co_proc = sum(Accelerator.Co.Processor != factor("None")), contained_acc = sum(!(Accelerator %in% factor("None"))))
+per_year <- top500_reduced %>% group_by(Top500_Year, Top500_Month) %>% summarise(occ = n(), contained_co_proc = sum(Accelerator.Co.Processor != factor("None"))## , contained_acc = sum(!(Accelerator %in% factor("None")))
+                                                                                 )
 per_year <- refine(per_year)
 per_year$list <- factor("Top500")
 #per_year
